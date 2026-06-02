@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeadForge — Client Intake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:        #F7F6F3;
+  --surface:   #FFFFFF;
+  --border:    #E4E2DC;
+  --border-md: #CCCAB8;
+  --ink:       #1A1916;
+  --ink-mid:   #4A4840;
+  --ink-low:   #8A8880;
+  --accent:    #1A6B4A;
+  --accent-lt: #E8F5EF;
+  --accent-md: #2A8B62;
+  --danger:    #C0392B;
+  --danger-lt: #FDECEA;
+  --warn:      #B45309;
+  --warn-lt:   #FEF3C7;
+  --info:      #1B4F9A;
+  --info-lt:   #EBF2FC;
+  --serif:     'Instrument Serif', Georgia, serif;
+  --sans:      'Geist', system-ui, sans-serif;
+  --radius:    10px;
+  --radius-sm: 6px;
+}
+html { font-size: 16px; }
+body { background: var(--bg); font-family: var(--sans); color: var(--ink); min-height: 100vh; line-height: 1.6; }
+
+/* ── LAYOUT ── */
+.shell { display: grid; grid-template-columns: 270px 1fr; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar { background: var(--ink); padding: 36px 24px; position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; overflow-y: auto; }
+.logo { display: flex; align-items: center; gap: 10px; margin-bottom: 44px; }
+.logo-mark { width: 30px; height: 30px; background: var(--accent); border-radius: 7px; display: flex; align-items: center; justify-content: center; }
+.logo-mark svg { width: 14px; height: 14px; }
+.logo-name { font-size: 15px; font-weight: 500; color: #F7F6F3; letter-spacing: -0.01em; }
+.steps-nav { flex: 1; }
+.steps-nav-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #3A3830; margin-bottom: 18px; }
+.step-item { display: flex; align-items: flex-start; gap: 12px; padding: 9px 0; cursor: pointer; opacity: 0.38; transition: opacity 0.2s; }
+.step-item.done   { opacity: 0.6; }
+.step-item.active { opacity: 1; cursor: default; }
+.step-dot { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #3A3830; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; font-size: 10px; color: #3A3830; transition: all 0.2s; }
+.step-item.done   .step-dot { background: var(--accent); border-color: var(--accent); color: #fff; }
+.step-item.active .step-dot { background: #F7F6F3; border-color: #F7F6F3; color: var(--ink); font-weight: 600; }
+.step-name { font-size: 13px; font-weight: 500; color: #F7F6F3; line-height: 1.3; }
+.step-desc { font-size: 12px; color: #5A5850; margin-top: 1px; }
+.step-item.active .step-desc { color: #9A9888; }
+.sidebar-footer { font-size: 12px; color: #3A3830; line-height: 1.6; padding-top: 20px; border-top: 1px solid #252420; }
+
+/* ── MAIN ── */
+.main { padding: 44px 52px; max-width: 700px; }
+.progress-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 44px; }
+.progress-track { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
+.progress-label { font-size: 12px; color: var(--ink-low); white-space: nowrap; }
+.step-panel { display: none; }
+.step-panel.active { display: block; animation: slideIn 0.25s ease; }
+@keyframes slideIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+.panel-eyebrow { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 7px; font-weight: 500; }
+.panel-title { font-family: var(--serif); font-size: 27px; color: var(--ink); line-height: 1.2; margin-bottom: 5px; }
+.panel-title em { font-style: italic; }
+.panel-sub { font-size: 14px; color: var(--ink-low); margin-bottom: 32px; max-width: 500px; line-height: 1.6; }
+
+/* ── FORM ELEMENTS ── */
+.form-grid { display: grid; gap: 16px; }
+.form-grid-2 { grid-template-columns: 1fr 1fr; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+label { font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: var(--ink-mid); }
+label .req { color: var(--accent); margin-left: 2px; }
+label .opt { font-size: 11px; font-weight: 400; color: var(--ink-low); margin-left: 4px; }
+input[type="text"], input[type="email"], input[type="url"], input[type="color"],
+select, textarea {
+  width: 100%; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--ink); font-family: var(--sans);
+  font-size: 14px; padding: 10px 14px; outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s; appearance: none;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,107,74,0.1); }
+input.error, select.error, textarea.error { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(192,57,43,0.08); }
+input::placeholder, textarea::placeholder { color: #C8C6BE; }
+select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A8880' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px; cursor: pointer; }
+select option { background: var(--surface); }
+textarea { resize: vertical; min-height: 80px; line-height: 1.6; }
+.field-hint  { font-size: 12px; color: var(--ink-low); line-height: 1.5; }
+.field-error { font-size: 12px; color: var(--danger); display: none; }
+.field-error.show { display: block; }
+
+/* ── ACCOUNT TOGGLE WIDGET ── */
+.acct-widget { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.acct-tabs { display: grid; grid-template-columns: 1fr 1fr; }
+.acct-tab {
+  padding: 10px 16px; font-family: var(--sans); font-size: 13px; font-weight: 500;
+  color: var(--ink-low); background: var(--bg); border: none; cursor: pointer;
+  border-bottom: 2px solid transparent; transition: all 0.15s; text-align: center;
+}
+.acct-tab:first-child { border-right: 1px solid var(--border); }
+.acct-tab.active-has  { color: var(--accent); border-bottom-color: var(--accent); background: var(--surface); }
+.acct-tab.active-create { color: var(--info);   border-bottom-color: var(--info);   background: var(--surface); }
+.acct-body { padding: 16px; background: var(--surface); }
+
+/* ID input row */
+.id-input-row { display: flex; gap: 8px; align-items: center; }
+.id-input-row input { flex: 1; }
+.verify-btn {
+  padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--bg); font-family: var(--sans); font-size: 12px; font-weight: 500;
+  color: var(--ink-mid); cursor: pointer; white-space: nowrap; transition: all 0.15s; flex-shrink: 0;
+}
+.verify-btn:hover { border-color: var(--accent); color: var(--accent); }
+.verify-btn.verified { border-color: var(--accent); background: var(--accent-lt); color: var(--accent); cursor: default; }
+.verify-status { font-size: 12px; margin-top: 6px; display: none; }
+.verify-status.ok  { color: var(--accent); display: block; }
+.verify-status.err { color: var(--danger); display: block; }
+
+/* OAuth / create panel */
+.create-panel { display: flex; flex-direction: column; gap: 14px; }
+.create-info { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+.create-info strong { color: var(--ink); font-weight: 500; }
+.scope-list { display: flex; flex-direction: column; gap: 6px; margin: 4px 0; }
+.scope-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-mid); }
+.scope-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--info); flex-shrink: 0; }
+
+/* OAuth button */
+.oauth-btn {
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; padding: 11px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  background: var(--surface); font-family: var(--sans); font-size: 13px; font-weight: 500;
+  color: var(--ink); cursor: pointer; transition: all 0.15s;
+}
+.oauth-btn:hover { border-color: var(--border-md); background: var(--bg); }
+.oauth-btn svg { flex-shrink: 0; }
+
+/* OAuth states */
+.oauth-idle     { display: flex; }
+.oauth-loading  { display: none; }
+.oauth-done     { display: none; }
+
+/* Spinner */
+.spinner {
+  width: 16px; height: 16px; border: 2px solid var(--border);
+  border-top-color: var(--info); border-radius: 50%;
+  animation: spin 0.8s linear infinite; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Created ID pill */
+.created-id-pill {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 14px; background: var(--accent-lt);
+  border: 1px solid rgba(26,107,74,0.2); border-radius: var(--radius-sm);
+}
+.created-id-pill.info-pill { background: var(--info-lt); border-color: rgba(27,79,154,0.2); }
+.pill-icon { width: 22px; height: 22px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pill-icon.blue { background: var(--info); }
+.pill-label { font-size: 12px; color: var(--ink-low); }
+.pill-value { font-family: var(--font-mono, monospace); font-size: 13px; font-weight: 500; color: var(--accent); }
+.pill-value.blue { color: var(--info); }
+.pill-redo { font-size: 12px; color: var(--ink-low); margin-left: auto; cursor: pointer; text-decoration: underline; }
+.pill-redo:hover { color: var(--danger); }
+
+/* ── PLATFORM CARDS ── */
+.platform-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 7px; }
+.platform-card { border: 1.5px solid var(--border); border-radius: var(--radius); padding: 13px 10px; cursor: pointer; text-align: center; transition: all 0.15s; user-select: none; }
+.platform-card:hover { border-color: var(--border-md); background: var(--bg); }
+.platform-card.selected { border-color: var(--accent); background: var(--accent-lt); }
+.platform-card input { display: none; }
+.platform-icon { font-size: 20px; margin-bottom: 5px; }
+.platform-name { font-size: 12px; font-weight: 500; color: var(--ink-mid); }
+.platform-card.selected .platform-name { color: var(--accent); }
+
+/* ── YES / NO ── */
+.yn-wrap { display: flex; gap: 8px; }
+.yn-btn { flex: 1; padding: 10px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--ink-mid); cursor: pointer; transition: all 0.15s; text-align: center; }
+.yn-btn.selected-yes { border-color: var(--accent); background: var(--accent-lt); color: var(--accent); }
+.yn-btn.selected-no  { border-color: var(--border-md); background: var(--bg); color: var(--ink); }
+
+/* ── CHECKBOXES ── */
+.check-group { display: flex; flex-direction: column; gap: 7px; }
+.check-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s; user-select: none; }
+.check-item:hover { border-color: var(--border-md); }
+.check-item.checked { border-color: var(--accent); background: var(--accent-lt); }
+.check-item input[type="checkbox"] { display: none; }
+.check-box { width: 16px; height: 16px; border: 1.5px solid var(--border-md); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.check-item.checked .check-box { background: var(--accent); border-color: var(--accent); }
+.check-box::after { content: ''; width: 8px; height: 5px; border-left: 1.5px solid white; border-bottom: 1.5px solid white; transform: rotate(-45deg) translate(0,-1px); display: none; }
+.check-item.checked .check-box::after { display: block; }
+.check-label { font-size: 13px; color: var(--ink); flex: 1; }
+
+/* ── TESTIMONIALS ── */
+.testi-builder { display: flex; flex-direction: column; gap: 10px; }
+.testi-entry { border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; background: var(--surface); }
+.testi-entry-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.testi-entry-num { font-size: 12px; font-weight: 500; color: var(--ink-low); }
+.remove-btn { font-size: 12px; color: var(--danger); background: none; border: none; cursor: pointer; font-family: var(--sans); }
+.testi-fields { display: grid; gap: 9px; }
+.testi-fields-row { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.add-testi-btn { display: flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1.5px dashed var(--border-md); border-radius: var(--radius); background: none; color: var(--ink-low); font-family: var(--sans); font-size: 13px; cursor: pointer; width: 100%; justify-content: center; transition: all 0.15s; }
+.add-testi-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-lt); }
+
+/* ── INFO / WARN BLOCKS ── */
+.info-block { background: var(--accent-lt); border: 1px solid rgba(26,107,74,0.15); border-radius: var(--radius); padding: 13px 15px; font-size: 13px; color: #1A4A30; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; }
+.info-block.blue { background: var(--info-lt); border-color: rgba(27,79,154,0.15); color: #163D7A; }
+.warn-block { background: var(--warn-lt); border: 1px solid rgba(180,83,9,0.15); border-radius: var(--radius); padding: 13px 15px; font-size: 13px; color: #7C3A09; line-height: 1.6; display: flex; gap: 10px; align-items: flex-start; }
+.block-icon { flex-shrink: 0; margin-top: 2px; }
+
+/* ── COLOR ── */
+.color-row { display: flex; gap: 8px; align-items: center; }
+.color-picker { width: 38px !important; height: 36px; padding: 2px 4px !important; cursor: pointer; flex-shrink: 0; }
+.color-text { flex: 1; }
+.color-preview { width: 20px; height: 20px; border-radius: 4px; border: 1px solid var(--border); flex-shrink: 0; }
+
+/* ── SUMMARY ── */
+.summary-grid { display: flex; flex-direction: column; gap: 18px; }
+.summary-section { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.summary-section-header { background: var(--bg); padding: 9px 15px; font-size: 11px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-low); display: flex; justify-content: space-between; align-items: center; }
+.edit-link { font-size: 12px; color: var(--accent); cursor: pointer; text-transform: none; letter-spacing: 0; font-weight: 400; }
+.summary-row { display: grid; grid-template-columns: 150px 1fr; gap: 8px; padding: 9px 15px; border-top: 1px solid var(--border); font-size: 13px; align-items: start; }
+.summary-key { color: var(--ink-low); }
+.summary-val { color: var(--ink); }
+.summary-val.green { color: var(--accent); font-weight: 500; }
+.summary-val.blue  { color: var(--info);   font-weight: 500; }
+.summary-val.muted { color: var(--ink-low); font-style: italic; }
+
+/* ── NAV ── */
+.nav-row { display: flex; align-items: center; justify-content: space-between; margin-top: 36px; padding-top: 22px; border-top: 1px solid var(--border); }
+.btn-back { display: flex; align-items: center; gap: 6px; font-family: var(--sans); font-size: 14px; color: var(--ink-low); background: none; border: none; cursor: pointer; padding: 10px 0; transition: color 0.15s; }
+.btn-back:hover { color: var(--ink); }
+.btn-back:disabled { opacity: 0; pointer-events: none; }
+.btn-next { display: flex; align-items: center; gap: 8px; background: var(--accent); color: #fff; font-family: var(--sans); font-size: 14px; font-weight: 500; padding: 11px 22px; border: none; border-radius: var(--radius-sm); cursor: pointer; transition: background 0.15s, transform 0.1s; }
+.btn-next:hover  { background: var(--accent-md); }
+.btn-next:active { transform: scale(0.98); }
+.divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+/* ── SUCCESS ── */
+.success-screen { text-align: center; padding: 56px 36px; }
+.success-icon { width: 60px; height: 60px; background: var(--accent-lt); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 22px; }
+.success-title { font-family: var(--serif); font-size: 30px; color: var(--ink); margin-bottom: 10px; }
+.success-sub { font-size: 14px; color: var(--ink-low); max-width: 380px; margin: 0 auto 28px; line-height: 1.7; }
+.success-items { display: flex; flex-direction: column; gap: 9px; max-width: 340px; margin: 0 auto; text-align: left; }
+.success-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink-mid); padding: 10px 13px; background: var(--bg); border-radius: var(--radius-sm); border: 1px solid var(--border); }
+.success-item-icon { width: 20px; height: 20px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+
+@media (max-width: 800px) {
+  .shell { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .main { padding: 28px 20px; max-width: 100%; }
+  .form-grid-2, .testi-fields-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-mark"><svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="logo-name">LeadForge</span>
+  </div>
+  <div class="steps-nav">
+    <div class="steps-nav-label">Setup steps</div>
+    <div id="sideSteps"></div>
+  </div>
+  <div class="sidebar-footer">Your data is used only to generate your infrastructure. Nothing is stored without your consent.</div>
+</aside>
+
+<!-- ── MAIN ── -->
+<main class="main">
+  <div class="progress-wrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel">Step 1 of 5</div>
+  </div>
+
+  <form id="intakeForm" novalidate>
+
+    <!-- ══════ STEP 1: Business basics ══════ -->
+    <div class="step-panel active" data-step="1">
+      <div class="panel-eyebrow">Step 1 of 5</div>
+      <h1 class="panel-title">Tell us about your <em>business</em></h1>
+      <p class="panel-sub">This drives your page headline, offer copy, and the smart fields auto-generated for your industry.</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Business name <span class="req">*</span></label>
+          <input type="text" name="business_name" placeholder="e.g. Priya Studios" required>
+          <div class="field-error" id="err-business_name">Please enter your business name.</div>
+        </div>
+        <div class="form-grid form-grid-2">
+          <div class="form-group">
+            <label>Industry / vertical <span class="req">*</span></label>
+            <select name="industry" required>
+              <option value="" disabled selected>Select your industry</option>
+              <option value="photography">Photography</option>
+              <option value="education">Education / tutoring</option>
+              <option value="home_services">Home services</option>
+              <option value="legal">Legal services</option>
+              <option value="health_wellness">Health &amp; wellness</option>
+              <option value="real_estate">Real estate</option>
+              <option value="events_catering">Events / catering</option>
+              <option value="financial">Financial services</option>
+              <option value="coaching">Coaching / consulting</option>
+              <option value="beauty_salon">Beauty / salon</option>
+              <option value="dental_medical">Dental / medical</option>
+              <option value="other">Other</option>
+            </select>
+            <div class="field-error" id="err-industry">Please select your industry.</div>
+          </div>
+          <div class="form-group">
+            <label>Primary offer <span class="req">*</span></label>
+            <select name="primary_offer" required>
+              <option value="" disabled selected>What are you offering?</option>
+              <option value="free_consultation">Free consultation</option>
+              <option value="free_quote">Free quote / estimate</option>
+              <option value="free_audit">Free audit / review</option>
+              <option value="free_trial">Free trial / demo</option>
+              <option value="free_guide">Free guide / resource</option>
+              <option value="discount">Discount / special offer</option>
+              <option value="callback">Book a callback</option>
+            </select>
+            <div class="field-error" id="err-primary_offer">Please select your primary offer.</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Describe your business <span class="opt">(optional)</span></label>
+          <textarea name="business_desc" placeholder="e.g. We capture weddings, portraits, and brand sessions across the GTA with a fine-art, natural-light approach." rows="2"></textarea>
+          <div class="field-hint">Used to generate the "Why us" copy on your page.</div>
+        </div>
+        <div class="form-group">
+          <label>Brand colour <span class="opt">(optional)</span></label>
+          <div class="color-row">
+            <input type="color" name="brand_color_picker" class="color-picker" value="#1A6B4A" oninput="syncColor(this)">
+            <input type="text" name="brand_color" class="color-text" placeholder="#1A6B4A" maxlength="7" value="#1A6B4A" oninput="syncColorText(this)">
+            <div class="color-preview" id="colorPreview" style="background:#1A6B4A"></div>
+          </div>
+          <div class="field-hint">Used for the CTA button. Falls back to a neutral default if skipped.</div>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" disabled>← Back</button>
+        <button type="button" class="btn-next" onclick="goNext(1)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══════ STEP 2: Website ══════ -->
+    <div class="step-panel" data-step="2">
+      <div class="panel-eyebrow">Step 2 of 5</div>
+      <h1 class="panel-title">Your <em>website</em> setup</h1>
+      <p class="panel-sub">This determines where your lead magnet page lives and whether cross-domain tracking needs configuring.</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Website platform <span class="req">*</span></label>
+          <div class="platform-grid" id="platformGrid">
+            <label class="platform-card" onclick="selectPlatform(this,'wordpress')"><input type="radio" name="platform" value="wordpress"><div class="platform-icon">🟦</div><div class="platform-name">WordPress</div></label>
+            <label class="platform-card" onclick="selectPlatform(this,'webflow')"><input type="radio" name="platform" value="webflow"><div class="platform-icon">⬡</div><div class="platform-name">Webflow</div></label>
+            <label class="platform-card" onclick="selectPlatform(this,'shopify')"><input type="radio" name="platform" value="shopify"><div class="platform-icon">🛍</div><div class="platform-name">Shopify</div></label>
+            <label class="platform-card" onclick="selectPlatform(this,'wix')"><input type="radio" name="platform" value="wix"><div class="platform-icon">Ⓦ</div><div class="platform-name">Wix</div></label>
+            <label class="platform-card" onclick="selectPlatform(this,'squarespace')"><input type="radio" name="platform" value="squarespace"><div class="platform-icon">◻</div><div class="platform-name">Squarespace</div></label>
+            <label class="platform-card" onclick="selectPlatform(this,'custom')"><input type="radio" name="platform" value="custom"><div class="platform-icon">⌨</div><div class="platform-name">Custom</div></label>
+            <label class="platform-card" onclick="selectPlatform(this,'none')"><input type="radio" name="platform" value="none"><div class="platform-icon">—</div><div class="platform-name">No website</div></label>
+          </div>
+          <div class="field-error" id="err-platform">Please select your website platform.</div>
+        </div>
+        <div class="form-group">
+          <label>Can you edit the &lt;head&gt; tag on your website? <span class="req">*</span></label>
+          <div class="yn-wrap">
+            <button type="button" class="yn-btn" id="yn-yes" onclick="selectYN('yes')">Yes — I have full access</button>
+            <button type="button" class="yn-btn" id="yn-no"  onclick="selectYN('no')">No — it's restricted</button>
+          </div>
+          <input type="hidden" name="can_edit_head" id="can_edit_head_val">
+          <div class="field-error" id="err-can_edit_head">Please select an option.</div>
+        </div>
+        <div class="form-group">
+          <label>Your domain <span class="req">*</span></label>
+          <input type="url" name="domain" placeholder="https://yourdomain.com" required>
+          <div class="field-hint">Include https://. Used for GTM cross-domain config and test URL generation.</div>
+          <div class="field-error" id="err-domain">Please enter your domain URL.</div>
+        </div>
+        <div class="info-block" id="deploymentDecision" style="display:none">
+          <svg class="block-icon" width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M7.5 6.5v4.5M7.5 4.5v.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <span id="deploymentText"></span>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" onclick="goBack(2)">← Back</button>
+        <button type="button" class="btn-next" onclick="goNext(2)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══════ STEP 3: Tracking accounts ══════ -->
+    <div class="step-panel" data-step="3">
+      <div class="panel-eyebrow">Step 3 of 5</div>
+      <h1 class="panel-title">Your <em>tracking</em> accounts</h1>
+      <p class="panel-sub">Don't have GTM or GA4 yet? No problem — LeadForge can create and configure them for you in one click.</p>
+
+      <div class="form-grid">
+
+        <!-- GTM widget -->
+        <div class="form-group">
+          <label>Google Tag Manager <span class="req">*</span></label>
+          <div class="acct-widget" id="gtm-widget">
+            <div class="acct-tabs">
+              <button type="button" class="acct-tab active-has" id="gtm-tab-has" onclick="switchAcctTab('gtm','has')">I already have GTM</button>
+              <button type="button" class="acct-tab" id="gtm-tab-create" onclick="switchAcctTab('gtm','create')">Create one for me</button>
+            </div>
+            <div class="acct-body">
+              <!-- HAS tab -->
+              <div id="gtm-has-panel">
+                <div class="id-input-row">
+                  <input type="text" name="gtm_id" id="gtm_id_input" placeholder="GTM-XXXXXXX">
+                  <button type="button" class="verify-btn" id="gtm-verify-btn" onclick="verifyId('gtm')">Verify</button>
+                </div>
+                <div class="verify-status" id="gtm-verify-status"></div>
+                <div class="field-hint" style="margin-top:6px">GTM → Admin → Container ID. Format: GTM-XXXXXXX</div>
+              </div>
+              <!-- CREATE tab -->
+              <div id="gtm-create-panel" style="display:none">
+                <div class="create-panel">
+                  <div class="create-info">
+                    LeadForge will create a new GTM account and container for <strong id="gtm-biz-name">your business</strong> using your Google account. You'll grant permission via Google's secure OAuth screen.
+                  </div>
+                  <div class="scope-list">
+                    <div class="scope-item"><div class="scope-dot"></div>Create a GTM account + web container</div>
+                    <div class="scope-item"><div class="scope-dot"></div>Grant LeadForge editor access automatically</div>
+                    <div class="scope-item"><div class="scope-dot"></div>Retrieve and store your container ID</div>
+                  </div>
+                  <!-- Idle state -->
+                  <div id="gtm-oauth-idle">
+                    <button type="button" class="oauth-btn" onclick="startOAuth('gtm')">
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#4285F4" stroke-width="1.5"/><path d="M9 5v4l3 2" stroke="#4285F4" stroke-width="1.5" stroke-linecap="round"/></svg>
+                      Connect Google account &amp; create GTM
+                    </button>
+                  </div>
+                  <!-- Loading state -->
+                  <div id="gtm-oauth-loading" style="display:none">
+                    <div class="oauth-btn" style="cursor:default;color:var(--ink-low)">
+                      <div class="spinner"></div>
+                      Creating GTM container…
+                    </div>
+                  </div>
+                  <!-- Done state -->
+                  <div id="gtm-oauth-done" style="display:none">
+                    <div class="created-id-pill">
+                      <div class="pill-icon">
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </div>
+                      <div>
+                        <div class="pill-label">GTM container created</div>
+                        <div class="pill-value" id="gtm-created-id">GTM-XXXXXXX</div>
+                      </div>
+                      <div class="pill-redo" onclick="resetOAuth('gtm')">Redo</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-error" id="err-gtm">Please provide or create a GTM container.</div>
+        </div>
+
+        <!-- GA4 widget -->
+        <div class="form-group">
+          <label>Google Analytics 4 <span class="req">*</span></label>
+          <div class="acct-widget" id="ga4-widget">
+            <div class="acct-tabs">
+              <button type="button" class="acct-tab active-has" id="ga4-tab-has" onclick="switchAcctTab('ga4','has')">I already have GA4</button>
+              <button type="button" class="acct-tab" id="ga4-tab-create" onclick="switchAcctTab('ga4','create')">Create one for me</button>
+            </div>
+            <div class="acct-body">
+              <!-- HAS tab -->
+              <div id="ga4-has-panel">
+                <div class="id-input-row">
+                  <input type="text" name="ga4_id" id="ga4_id_input" placeholder="G-XXXXXXXXXX">
+                  <button type="button" class="verify-btn" id="ga4-verify-btn" onclick="verifyId('ga4')">Verify</button>
+                </div>
+                <div class="verify-status" id="ga4-verify-status"></div>
+                <div class="field-hint" style="margin-top:6px">GA4 → Admin → Data Streams → your stream. Format: G-XXXXXXXXXX</div>
+              </div>
+              <!-- CREATE tab -->
+              <div id="ga4-create-panel" style="display:none">
+                <div class="create-panel">
+                  <div class="create-info">
+                    LeadForge will create a new GA4 property for <strong id="ga4-biz-name">your business</strong> using the Google Admin API. Industry category and timezone are set automatically from your intake data.
+                  </div>
+                  <div class="scope-list">
+                    <div class="scope-item"><div class="scope-dot" style="background:var(--info)"></div>Create a GA4 property with your business details</div>
+                    <div class="scope-item"><div class="scope-dot" style="background:var(--info)"></div>Configure a web data stream for your domain</div>
+                    <div class="scope-item"><div class="scope-dot" style="background:var(--info)"></div>Grant LeadForge editor access automatically</div>
+                  </div>
+                  <!-- Idle -->
+                  <div id="ga4-oauth-idle">
+                    <button type="button" class="oauth-btn" onclick="startOAuth('ga4')">
+                      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" stroke="#4285F4" stroke-width="1.5"/><path d="M9 5v4l3 2" stroke="#4285F4" stroke-width="1.5" stroke-linecap="round"/></svg>
+                      Connect Google account &amp; create GA4
+                    </button>
+                  </div>
+                  <!-- Loading -->
+                  <div id="ga4-oauth-loading" style="display:none">
+                    <div class="oauth-btn" style="cursor:default;color:var(--ink-low)">
+                      <div class="spinner"></div>
+                      Creating GA4 property…
+                    </div>
+                  </div>
+                  <!-- Done -->
+                  <div id="ga4-oauth-done" style="display:none">
+                    <div class="created-id-pill info-pill">
+                      <div class="pill-icon blue">
+                        <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </div>
+                      <div>
+                        <div class="pill-label">GA4 property created</div>
+                        <div class="pill-value blue" id="ga4-created-id">G-XXXXXXXXXX</div>
+                      </div>
+                      <div class="pill-redo" onclick="resetOAuth('ga4')">Redo</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="field-error" id="err-ga4">Please provide or create a GA4 property.</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Google Ads + Meta (manual only — no API creation path) -->
+        <div class="form-grid form-grid-2">
+          <div class="form-group">
+            <label>Google Ads account ID <span class="opt">(optional)</span></label>
+            <input type="text" name="gads_account" placeholder="123-456-7890">
+            <div class="field-hint">Needed for conversion tracking. Link your account to our MCC in Google Ads → Admin → Access.</div>
+          </div>
+          <div class="form-group">
+            <label>Meta Pixel ID <span class="opt">(optional)</span></label>
+            <input type="text" name="meta_pixel_id" placeholder="123456789012345">
+            <div class="field-hint">Meta Events Manager → Data Sources → your Pixel. 15–16 digits.</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-group">
+          <label>Google Sheet URL <span class="req">*</span></label>
+          <input type="url" name="sheet_url" placeholder="https://docs.google.com/spreadsheets/d/..." required>
+          <div class="field-hint">Share a blank sheet and paste the URL here. The agent creates headers, formatting, and the webhook automatically.</div>
+          <div class="field-error" id="err-sheet_url">Please paste your Google Sheet URL.</div>
+        </div>
+
+        <div class="warn-block">
+          <svg class="block-icon" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5L13.5 12.5H1.5L7.5 1.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M7.5 6v3M7.5 10.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <span>Add <strong>agent@leadforge-app.iam.gserviceaccount.com</strong> as Editor on your GTM container, GA4 property, and Google Sheet. If you used "Create one for me" above, this is done automatically.</span>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button type="button" class="btn-back" onclick="goBack(3)">← Back</button>
+        <button type="button" class="btn-next" onclick="goNext(3)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- ══════ STEP 4: Page content ══════ -->
+    <div class="step-panel" data-step="4">
+      <div class="panel-eyebrow">Step 4 of 5</div>
+      <h1 class="panel-title">Page <em>content</em></h1>
+      <p class="panel-sub">Personalise your lead magnet page. Skip anything you don't have — the agent fills in the rest.</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Form fields to include <span class="req">*</span></label>
+          <div class="check-group">
+            <label class="check-item checked"><input type="checkbox" name="fields[]" value="name" checked disabled><div class="check-box"></div><div class="check-label">Name <span style="font-size:11px;color:var(--ink-low);margin-left:6px">always required</span></div></label>
+            <label class="check-item checked"><input type="checkbox" name="fields[]" value="email" checked disabled><div class="check-box"></div><div class="check-label">Email <span style="font-size:11px;color:var(--ink-low);margin-left:6px">always required</span></div></label>
+            <label class="check-item checked" onclick="toggleCheck(this)"><input type="checkbox" name="fields[]" value="phone" checked><div class="check-box"></div><div class="check-label">Phone number</div></label>
+            <label class="check-item checked" onclick="toggleCheck(this)"><input type="checkbox" name="fields[]" value="city" checked><div class="check-box"></div><div class="check-label">City</div></label>
+            <label class="check-item checked" onclick="toggleCheck(this)"><input type="checkbox" name="fields[]" value="message" checked><div class="check-box"></div><div class="check-label">Message / notes</div></label>
+          </div>
+          <div class="field-hint" style="margin-top:6px">Smart fields for your vertical are added automatically below these.</div>
+        </div>
+        <div class="form-group">
+          <label>New lead notification email <span class="opt">(optional)</span></label>
+          <input type="email" name="notify_email" placeholder="hello@yourbusiness.com">
+          <div class="field-hint">You'll receive an email each time a lead submits the form.</div>
+        </div>
+        <div class="divider"></div>
+        <div class="form-group">
+          <label>Testimonials <span class="opt">(optional — up to 3)</span></label>
+          <div class="testi-builder" id="testiBuilder">
+            <div class="testi-entry" data-idx="1">
+              <div class="testi-entry-header">
+                <div class="testi-entry-num">Testimonial 1</div>
+              </div>
+              <div class="testi-fields">
+                <div><label>Quote</label><textarea name="testi_quote_1" placeholder="What your client said about working with you..." rows="2"></textarea></div>
+                <div class="testi-fields-row">
+                  <div><label>Client name</label><input type="text" name="testi_name_1" placeholder="Sarah M."></div>
+                  <div><label>Context</label><input type="text" name="testi_context_1" placeholder="Wedding · Sept 2024"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="add-testi-btn" id="addTestiBtn" onclick="addTestimonial()">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5v10M1.5 6.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Add another testimonial
+          </button>
+        </div>
+      </div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" onclick="goBack(4)">← Back</button>
+        <button type="button" class="btn-next" onclick="goNext(4)">Review & build →</button>
+      </div>
+    </div>
+
+    <!-- ══════ STEP 5: Review ══════ -->
+    <div class="step-panel" data-step="5">
+      <div class="panel-eyebrow">Step 5 of 5</div>
+      <h1 class="panel-title"><em>Review</em> your setup</h1>
+      <p class="panel-sub">Everything correct? Hit Build to generate your lead magnet page, GTM container, Apps Script webhook, and setup checklist.</p>
+      <div class="summary-grid" id="summaryGrid"></div>
+      <div class="nav-row">
+        <button type="button" class="btn-back" onclick="goBack(5)">← Back</button>
+        <button type="button" class="btn-next" id="buildBtn" onclick="submitForm()" style="padding:12px 28px;font-size:15px">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Build my infrastructure
+        </button>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- ══════ SUCCESS ══════ -->
+  <div id="successScreen" style="display:none">
+    <div class="success-screen">
+      <div class="success-icon">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M4 13l6.5 6.5L22 7" stroke="#1A6B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h2 class="success-title">Your infrastructure is building.</h2>
+      <p class="success-sub">The agent is generating all your assets — this usually takes under 30 seconds.</p>
+      <div class="success-items">
+        <div class="success-item"><div class="success-item-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Lead magnet page (HTML)</div>
+        <div class="success-item"><div class="success-item-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>GTM container (JSON)</div>
+        <div class="success-item"><div class="success-item-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Apps Script webhook</div>
+        <div class="success-item"><div class="success-item-icon"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Personalised setup checklist</div>
+      </div>
+    </div>
+  </div>
+</main>
+</div>
+
+<script>
+var currentStep = 1;
+var totalSteps  = 5;
+var formData    = {};
+var testiCount  = 1;
+var platformVal = '';
+var ynVal       = '';
+
+/* ── Account state tracking ── */
+var acctState = {
+  gtm: { mode: 'has', verified: false, createdId: '', oauthDone: false },
+  ga4: { mode: 'has', verified: false, createdId: '', oauthDone: false }
+};
+
+var stepMeta = [
+  { label: 'Business basics',   desc: 'Name, industry, offer'        },
+  { label: 'Website setup',     desc: 'Platform, domain, deployment'  },
+  { label: 'Tracking accounts', desc: 'GTM, GA4, Ads, Meta'           },
+  { label: 'Page content',      desc: 'Fields, testimonials'          },
+  { label: 'Review & build',    desc: 'Confirm and generate'          },
+];
+
+function init() {
+  var html = '';
+  stepMeta.forEach(function(s, i) {
+    var n = i + 1;
+    html += '<div class="step-item' + (n===1?' active':'') + '" id="sideStep'+n+'" onclick="jumpStep('+n+')">'
+          + '<div class="step-dot">' + n + '</div>'
+          + '<div><div class="step-name">' + s.label + '</div>'
+          + '<div class="step-desc">' + s.desc + '</div></div></div>';
+  });
+  document.getElementById('sideSteps').innerHTML = html;
+  updateProgress();
+}
+
+function updateProgress() {
+  var pct = ((currentStep - 1) / totalSteps) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = 'Step ' + currentStep + ' of ' + totalSteps;
+  for (var i = 1; i <= totalSteps; i++) {
+    var el = document.getElementById('sideStep' + i);
+    if (!el) continue;
+    el.className = 'step-item' + (i < currentStep ? ' done' : '') + (i === currentStep ? ' active' : '');
+    el.querySelector('.step-dot').textContent = i < currentStep ? '✓' : i;
+  }
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step-panel').forEach(function(p) { p.classList.remove('active'); });
+  var panel = document.querySelector('[data-step="' + n + '"]');
+  if (panel) panel.classList.add('active');
+  currentStep = n;
+  updateProgress();
+  window.scrollTo(0, 0);
+
+  /* Sync business name into create panels */
+  var bn = (document.querySelector('[name="business_name"]') || {}).value || 'your business';
+  var gnEl = document.getElementById('gtm-biz-name');
+  var gaEl = document.getElementById('ga4-biz-name');
+  if (gnEl) gnEl.textContent = bn || 'your business';
+  if (gaEl) gaEl.textContent = bn || 'your business';
+}
+
+function jumpStep(n) { if (n < currentStep) showStep(n); }
+
+/* ── ACCOUNT WIDGET: tab switch ── */
+function switchAcctTab(platform, mode) {
+  acctState[platform].mode = mode;
+  var hasTab    = document.getElementById(platform + '-tab-has');
+  var createTab = document.getElementById(platform + '-tab-create');
+  var hasPanel    = document.getElementById(platform + '-has-panel');
+  var createPanel = document.getElementById(platform + '-create-panel');
+
+  if (mode === 'has') {
+    hasTab.className    = 'acct-tab active-has';
+    createTab.className = 'acct-tab';
+    hasPanel.style.display    = '';
+    createPanel.style.display = 'none';
+  } else {
+    hasTab.className    = 'acct-tab';
+    createTab.className = 'acct-tab active-create';
+    hasPanel.style.display    = 'none';
+    createPanel.style.display = '';
+  }
+}
+
+/* ── VERIFY existing ID ── */
+function verifyId(platform) {
+  var input  = document.getElementById(platform + '_id_input');
+  var btn    = document.getElementById(platform + '-verify-btn');
+  var status = document.getElementById(platform + '-verify-status');
+  var val    = input.value.trim();
+
+  var pattern = platform === 'gtm' ? /^GTM-[A-Z0-9]{4,}$/i : /^G-[A-Z0-9]{6,}$/i;
+
+  if (!pattern.test(val)) {
+    status.className   = 'verify-status err';
+    status.textContent = platform === 'gtm'
+      ? '✗ Format should be GTM-XXXXXXX'
+      : '✗ Format should be G-XXXXXXXXXX';
+    acctState[platform].verified = false;
+    return;
+  }
+
+  /* Simulate async verification — replace with real API call */
+  btn.textContent = '…';
+  btn.disabled    = true;
+  setTimeout(function() {
+    acctState[platform].verified = true;
+    btn.className   = 'verify-btn verified';
+    btn.textContent = '✓ Verified';
+    status.className   = 'verify-status ok';
+    status.textContent = '✓ ID found and access confirmed';
+    document.getElementById('err-' + platform).classList.remove('show');
+  }, 900);
+}
+
+/* ── OAUTH flow simulation ── */
+/* In production: replace this with a real OAuth popup/redirect.
+   The flow is:
+     1. Open Google OAuth consent URL with scopes:
+        GTM: https://www.googleapis.com/auth/tagmanager.manage.accounts
+             https://www.googleapis.com/auth/tagmanager.edit.containers
+        GA4: https://www.googleapis.com/auth/analytics.edit
+     2. On callback, POST auth code to your backend
+     3. Backend exchanges code for token, calls:
+        GTM: tagmanager.accounts.create + containers.create + permissions.create
+        GA4: analyticsadmin.properties.create + dataStreams.create + accessBindings.create
+     4. Return created ID to frontend → populate pill */
+function startOAuth(platform) {
+  var bn = (document.querySelector('[name="business_name"]') || {}).value || 'My Business';
+  document.getElementById(platform + '-oauth-idle').style.display    = 'none';
+  document.getElementById(platform + '-oauth-loading').style.display = '';
+
+  /* Simulate network round-trip — replace with real OAuth + API calls */
+  var delay = platform === 'gtm' ? 2200 : 2800;
+  setTimeout(function() {
+    /* Simulated created IDs — in production these come back from your API */
+    var fakeId = platform === 'gtm'
+      ? 'GTM-' + Math.random().toString(36).substr(2,6).toUpperCase()
+      : 'G-'   + Math.random().toString(36).substr(2,8).toUpperCase();
+
+    acctState[platform].createdId  = fakeId;
+    acctState[platform].oauthDone  = true;
+    acctState[platform].verified   = true;
+
+    document.getElementById(platform + '-oauth-loading').style.display = 'none';
+    document.getElementById(platform + '-oauth-done').style.display    = '';
+    document.getElementById(platform + '-created-id').textContent      = fakeId;
+    document.getElementById('err-' + platform).classList.remove('show');
+  }, delay);
+}
+
+function resetOAuth(platform) {
+  acctState[platform].createdId = '';
+  acctState[platform].oauthDone = false;
+  acctState[platform].verified  = false;
+  document.getElementById(platform + '-oauth-done').style.display    = 'none';
+  document.getElementById(platform + '-oauth-loading').style.display = 'none';
+  document.getElementById(platform + '-oauth-idle').style.display    = '';
+}
+
+/* ── PLATFORM / YN ── */
+function selectPlatform(card, val) {
+  document.querySelectorAll('.platform-card').forEach(function(c) { c.classList.remove('selected'); });
+  card.classList.add('selected');
+  platformVal = val;
+  document.getElementById('err-platform').classList.remove('show');
+
+  var locked  = ['wix','squarespace'].indexOf(val) !== -1;
+  var noSite  = val === 'none';
+  var info    = document.getElementById('deploymentDecision');
+  var txt     = document.getElementById('deploymentText');
+
+  if (noSite) {
+    txt.innerHTML = '<strong>No website detected.</strong> We\'ll deploy to a free Netlify subdomain (<code>yourbusiness.netlify.app</code>), or your custom domain if provided.';
+    info.style.display = 'flex';
+    selectYN('no');
+  } else if (locked) {
+    txt.innerHTML = '<strong>' + val.charAt(0).toUpperCase()+val.slice(1) + ' detected.</strong> &lt;head&gt; access is restricted — we\'ll deploy to <code>go.yourdomain.com</code> on Netlify free tier with cross-domain tracking configured in GTM.';
+    info.style.display = 'flex';
+    selectYN('no');
+  } else {
+    txt.innerHTML = '<strong>Great.</strong> We\'ll create a new page at <code>yourdomain.com/free-consultation</code> with GTM injected in the &lt;head&gt;. No cross-domain setup needed.';
+    info.style.display = 'flex';
+  }
+}
+
+function selectYN(val) {
+  ynVal = val;
+  document.getElementById('yn-yes').className = 'yn-btn' + (val==='yes'?' selected-yes':'');
+  document.getElementById('yn-no').className  = 'yn-btn' + (val==='no' ?' selected-no' :'');
+  document.getElementById('can_edit_head_val').value = val;
+  document.getElementById('err-can_edit_head').classList.remove('show');
+}
+
+function syncColor(picker) {
+  document.querySelector('[name="brand_color"]').value = picker.value;
+  document.getElementById('colorPreview').style.background = picker.value;
+}
+function syncColorText(input) {
+  if (/^#[0-9A-Fa-f]{6}$/.test(input.value)) {
+    document.querySelector('[name="brand_color_picker"]').value = input.value;
+    document.getElementById('colorPreview').style.background   = input.value;
+  }
+}
+
+function toggleCheck(label) {
+  var cb = label.querySelector('input[type="checkbox"]');
+  if (cb.disabled) return;
+  cb.checked = !cb.checked;
+  label.classList.toggle('checked', cb.checked);
+}
+
+function addTestimonial() {
+  if (testiCount >= 3) return;
+  testiCount++;
+  var div = document.createElement('div');
+  div.className = 'testi-entry'; div.dataset.idx = testiCount;
+  div.innerHTML = '<div class="testi-entry-header"><div class="testi-entry-num">Testimonial '+testiCount+'</div>'
+    +'<button type="button" class="remove-btn" onclick="removeTestimonial(this)">Remove</button></div>'
+    +'<div class="testi-fields">'
+    +'<div><label>Quote</label><textarea name="testi_quote_'+testiCount+'" rows="2" placeholder="What your client said..."></textarea></div>'
+    +'<div class="testi-fields-row">'
+    +'<div><label>Client name</label><input type="text" name="testi_name_'+testiCount+'" placeholder="Jane D."></div>'
+    +'<div><label>Context</label><input type="text" name="testi_context_'+testiCount+'" placeholder="Portrait · Jan 2025"></div>'
+    +'</div></div>';
+  document.getElementById('testiBuilder').appendChild(div);
+  if (testiCount >= 3) document.getElementById('addTestiBtn').style.display = 'none';
+}
+function removeTestimonial(btn) {
+  btn.closest('.testi-entry').remove();
+  testiCount--;
+  document.getElementById('addTestiBtn').style.display = '';
+}
+
+/* ── VALIDATION ── */
+function validateStep(step) {
+  var ok = true;
+  function showErr(id) {
+    var el = document.getElementById('err-' + id);
+    var inp = document.querySelector('[name="' + id + '"]');
+    if (el)  el.classList.add('show');
+    if (inp) inp.classList.add('error');
+    ok = false;
+  }
+  function clearErr(id) {
+    var el = document.getElementById('err-' + id);
+    var inp = document.querySelector('[name="' + id + '"]');
+    if (el)  el.classList.remove('show');
+    if (inp) inp.classList.remove('error');
+  }
+
+  if (step === 1) {
+    document.querySelector('[name="business_name"]').value.trim() ? clearErr('business_name') : showErr('business_name');
+    document.querySelector('[name="industry"]').value             ? clearErr('industry')       : showErr('industry');
+    document.querySelector('[name="primary_offer"]').value        ? clearErr('primary_offer')  : showErr('primary_offer');
+  }
+
+  if (step === 2) {
+    if (!platformVal) { document.getElementById('err-platform').classList.add('show'); ok = false; }
+    else               { document.getElementById('err-platform').classList.remove('show'); }
+    if (!ynVal)        { document.getElementById('err-can_edit_head').classList.add('show'); ok = false; }
+    else               { document.getElementById('err-can_edit_head').classList.remove('show'); }
+    document.querySelector('[name="domain"]').value.trim() ? clearErr('domain') : showErr('domain');
+  }
+
+  if (step === 3) {
+    /* GTM */
+    var gtmOk = false;
+    if (acctState.gtm.mode === 'has') {
+      var gtmVal = (document.getElementById('gtm_id_input') || {}).value || '';
+      gtmOk = acctState.gtm.verified || /^GTM-/i.test(gtmVal.trim());
+    } else {
+      gtmOk = acctState.gtm.oauthDone;
+    }
+    if (!gtmOk) { document.getElementById('err-gtm').classList.add('show'); ok = false; }
+    else        { document.getElementById('err-gtm').classList.remove('show'); }
+
+    /* GA4 */
+    var ga4Ok = false;
+    if (acctState.ga4.mode === 'has') {
+      var ga4Val = (document.getElementById('ga4_id_input') || {}).value || '';
+      ga4Ok = acctState.ga4.verified || /^G-/i.test(ga4Val.trim());
+    } else {
+      ga4Ok = acctState.ga4.oauthDone;
+    }
+    if (!ga4Ok) { document.getElementById('err-ga4').classList.add('show'); ok = false; }
+    else        { document.getElementById('err-ga4').classList.remove('show'); }
+
+    /* Sheet */
+    document.querySelector('[name="sheet_url"]').value.trim() ? clearErr('sheet_url') : showErr('sheet_url');
+  }
+
+  return ok;
+}
+
+function collectData() {
+  var fd = new FormData(document.getElementById('intakeForm'));
+  fd.forEach(function(v, k) { formData[k] = v; });
+  formData.platform      = platformVal;
+  formData.can_edit_head = ynVal;
+
+  /* Resolve final IDs from widget state */
+  if (acctState.gtm.mode === 'create' && acctState.gtm.oauthDone) {
+    formData.gtm_id = acctState.gtm.createdId;
+  } else {
+    formData.gtm_id = (document.getElementById('gtm_id_input') || {}).value || '';
+  }
+  if (acctState.ga4.mode === 'create' && acctState.ga4.oauthDone) {
+    formData.ga4_id = acctState.ga4.createdId;
+  } else {
+    formData.ga4_id = (document.getElementById('ga4_id_input') || {}).value || '';
+  }
+
+  formData.gtm_was_created = acctState.gtm.mode === 'create' && acctState.gtm.oauthDone;
+  formData.ga4_was_created = acctState.ga4.mode === 'create' && acctState.ga4.oauthDone;
+}
+
+function goNext(fromStep) {
+  if (!validateStep(fromStep)) return;
+  collectData();
+  if (fromStep === 4) buildSummary();
+  showStep(fromStep + 1);
+}
+function goBack(fromStep) { showStep(fromStep - 1); }
+
+/* ── SUMMARY ── */
+var industryMap = {photography:'Photography',education:'Education / tutoring',home_services:'Home services',legal:'Legal services',health_wellness:'Health & wellness',real_estate:'Real estate',events_catering:'Events / catering',financial:'Financial services',coaching:'Coaching / consulting',beauty_salon:'Beauty / salon',dental_medical:'Dental / medical',other:'Other'};
+var offerMap = {free_consultation:'Free consultation',free_quote:'Free quote / estimate',free_audit:'Free audit / review',free_trial:'Free trial / demo',free_guide:'Free guide / resource',discount:'Discount / special offer',callback:'Book a callback'};
+
+function buildSummary() {
+  collectData();
+  var deployPath = (ynVal==='yes' && ['wix','squarespace','none'].indexOf(platformVal)===-1)
+    ? 'New page on same domain' : 'Subdomain via Netlify';
+
+  var gtmDisplay = formData.gtm_was_created
+    ? '<span class="blue">' + formData.gtm_id + ' (created ✓)</span>'
+    : formData.gtm_id || '—';
+  var ga4Display = formData.ga4_was_created
+    ? '<span class="blue">' + formData.ga4_id + ' (created ✓)</span>'
+    : formData.ga4_id || '—';
+
+  var html = '';
+  html += makeSection('Business', 1, [
+    ['Business name', formData.business_name || '—'],
+    ['Industry',      industryMap[formData.industry] || '—'],
+    ['Offer',         offerMap[formData.primary_offer] || '—'],
+    ['Brand colour',  formData.brand_color || '(default)'],
+  ]);
+  html += makeSection('Website & deployment', 2, [
+    ['Platform',       (platformVal||'—').charAt(0).toUpperCase()+(platformVal||'').slice(1)],
+    ['&lt;head&gt; access', ynVal === 'yes' ? 'Yes' : 'No'],
+    ['Domain',         formData.domain || '—'],
+    ['Deploy path',    deployPath],
+  ]);
+  html += makeSection('Tracking accounts', 3, [
+    ['GTM container',  gtmDisplay],
+    ['GA4 property',   ga4Display],
+    ['Google Ads',     formData.gads_account || '<span class="muted">Skipped</span>'],
+    ['Meta Pixel',     formData.meta_pixel_id|| '<span class="muted">Skipped</span>'],
+    ['Google Sheet',   formData.sheet_url ? '<span class="green">Provided ✓</span>' : '—'],
+  ]);
+  html += makeSection('Page content', 4, [
+    ['Notify email',  formData.notify_email || '<span class="muted">Off</span>'],
+    ['Testimonials',  testiCount + ' added'],
+    ['Smart fields',  'Auto for ' + (industryMap[formData.industry]||'your vertical')],
+  ]);
+  document.getElementById('summaryGrid').innerHTML = html;
+}
+
+function makeSection(title, stepNum, rows) {
+  var html = '<div class="summary-section"><div class="summary-section-header">' + title
+    + '<span class="edit-link" onclick="showStep('+stepNum+')">Edit</span></div>';
+  rows.forEach(function(r) {
+    html += '<div class="summary-row"><div class="summary-key">' + r[0]
+         + '</div><div class="summary-val">' + r[1] + '</div></div>';
+  });
+  return html + '</div>';
+}
+
+function submitForm() {
+  document.getElementById('intakeForm').style.display   = 'none';
+  document.getElementById('successScreen').style.display = 'block';
+  /* Production: POST formData to agent API endpoint */
+  console.log('LeadForge intake payload:', formData);
+}
+
+init();
+</script>
+</body>
+</html>
