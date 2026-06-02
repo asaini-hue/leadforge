@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeadForge — Marketing infrastructure for small businesses</title>
+<meta name="description" content="One setup. Every lead tracked. LeadForge builds your lead magnet page, ad tracking, and CRM in one automated session — for $299 and $49/month.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:      #111010;
+  --ink-mid:  #3A3836;
+  --ink-low:  #7A7672;
+  --off:      #F5F3EF;
+  --warm:     #ECEAE4;
+  --green:    #1A6B4A;
+  --green-lt: #E8F5EF;
+  --green-md: #2A8B62;
+  --gold:     #C49A3C;
+  --border:   #E2E0D8;
+  --surface:  #FFFFFF;
+  --serif:    'Fraunces', Georgia, serif;
+  --sans:     'Geist', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  background: var(--off);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 56px;
+  height: 64px;
+  background: rgba(245,243,239,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+}
+.nav-logo-mark {
+  width: 28px; height: 28px;
+  background: var(--ink);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+}
+.nav-logo-mark svg { width: 13px; height: 13px; }
+.nav-logo-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  list-style: none;
+}
+.nav-links a {
+  font-size: 13px;
+  color: var(--ink-low);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.nav-links a:hover { color: var(--ink); }
+
+.nav-cta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.btn-nav {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s;
+  border: none;
+}
+.btn-ghost { background: transparent; color: var(--ink-mid); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--warm); }
+.btn-solid { background: var(--ink); color: #fff; }
+.btn-solid:hover { background: var(--ink-mid); }
+
+/* ─── HERO ─── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px 56px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+/* Dot grid pattern */
+.hero-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 80% 70% at 60% 40%, black 0%, transparent 70%);
+}
+/* Large background numeral */
+.hero-bg::after {
+  content: '01';
+  position: absolute;
+  bottom: -60px;
+  right: -20px;
+  font-family: var(--serif);
+  font-size: 320px;
+  font-weight: 300;
+  color: rgba(0,0,0,0.035);
+  line-height: 1;
+  user-select: none;
+}
+
+.hero-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 80px;
+  align-items: center;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 24px;
+  animation: fadeUp 0.7s ease both;
+}
+.hero-eyebrow-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+h1 {
+  font-family: var(--serif);
+  font-size: clamp(48px, 5.5vw, 80px);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 28px;
+  animation: fadeUp 0.7s ease 0.08s both;
+}
+h1 em {
+  font-style: italic;
+  color: var(--green);
+}
+h1 span.ruled {
+  display: inline-block;
+  border-bottom: 2.5px solid var(--ink);
+  padding-bottom: 2px;
+}
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--ink-mid);
+  line-height: 1.7;
+  max-width: 480px;
+  margin-bottom: 40px;
+  animation: fadeUp 0.7s ease 0.16s both;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: fadeUp 0.7s ease 0.24s both;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 14px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+}
+.btn-primary:hover  { background: var(--ink-mid); }
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-mid);
+  text-decoration: none;
+  padding: 14px 4px;
+  transition: color 0.15s;
+}
+.btn-secondary:hover { color: var(--ink); }
+.btn-secondary svg { transition: transform 0.15s; }
+.btn-secondary:hover svg { transform: translateX(3px); }
+
+.hero-proof {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 48px;
+  animation: fadeUp 0.7s ease 0.32s both;
+}
+.proof-divider { width: 1px; height: 28px; background: var(--border); }
+.proof-stat { text-align: center; }
+.proof-num {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.proof-label { font-size: 12px; color: var(--ink-low); }
+
+/* Hero right: dashboard preview */
+.hero-visual {
+  animation: fadeUp 0.7s ease 0.2s both;
+  position: relative;
+}
+
+.dashboard-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07), 0 1px 4px rgba(0,0,0,0.04);
+}
+.dash-header {
+  background: var(--ink);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.dash-dot { width: 9px; height: 9px; border-radius: 50%; }
+.dash-title {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  margin-left: 4px;
+  letter-spacing: 0.04em;
+}
+.dash-body { padding: 18px; }
+
+.dash-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.dash-metric {
+  background: var(--off);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.dash-metric-label { font-size: 11px; color: var(--ink-low); margin-bottom: 4px; }
+.dash-metric-val {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 400;
+  color: var(--ink);
+  line-height: 1;
+}
+.dash-metric-val.green { color: var(--green); }
+.dash-metric-sub { font-size: 11px; color: var(--green); margin-top: 3px; }
+
+.dash-leads-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-low);
+  margin-bottom: 10px;
+}
+.dash-lead-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.dash-lead-row:last-child { border-bottom: none; }
+.dash-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 500; flex-shrink: 0;
+}
+.av-g { background: #EBF2FC; color: #1B4F9A; }
+.av-m { background: #F3EEFF; color: #5B3BAA; }
+.av-o { background: #E8F5EF; color: #1A6B4A; }
+.dash-lead-name { flex: 1; font-weight: 500; color: var(--ink); }
+.dash-lead-src  { font-size: 11px; padding: 2px 8px; border-radius: 99px; }
+.src-g { background: #EBF2FC; color: #1B4F9A; }
+.src-m { background: #F3EEFF; color: #5B3BAA; }
+.src-o { background: #E8F5EF; color: #1A6B4A; }
+
+/* Floating badge */
+.hero-badge {
+  position: absolute;
+  bottom: -18px;
+  left: -24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  animation: pulse 3s ease-in-out infinite;
+}
+.badge-icon {
+  width: 32px; height: 32px;
+  background: var(--green-lt);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.badge-top { font-weight: 500; color: var(--ink); font-size: 13px; }
+.badge-sub { font-size: 11px; color: var(--ink-low); }
+
+@keyframes pulse {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── LOGO STRIP ─── */
+.logo-strip {
+  background: var(--ink);
+  padding: 20px 56px;
+  overflow: hidden;
+}
+.logo-strip-inner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.logo-strip-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  white-space: nowrap;
+  margin-right: 40px;
+  flex-shrink: 0;
+}
+.logo-strip-items {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex: 1;
+  overflow: hidden;
+}
+.strip-logo {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.4);
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.strip-logo-icon { font-size: 16px; }
+
+/* ─── HOW IT WORKS ─── */
+.section {
+  padding: 96px 56px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.section-full { padding: 96px 56px; }
+
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-family: var(--serif);
+  font-size: clamp(34px, 3.5vw, 52px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+h2 em { font-style: italic; color: var(--green); }
+
+.section-sub {
+  font-size: 16px;
+  color: var(--ink-mid);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 64px;
+}
+
+/* Steps */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.step-card {
+  background: var(--surface);
+  padding: 40px 36px;
+  position: relative;
+  transition: background 0.2s;
+}
+.step-card:hover { background: #FAFAF8; }
+.step-num-lg {
+  font-family: var(--serif);
+  font-size: 64px;
+  font-weight: 300;
+  line-height: 1;
+  color: rgba(0,0,0,0.06);
+  margin-bottom: 20px;
+}
+.step-icon {
+  width: 44px; height: 44px;
+  background: var(--off);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+.step-card h3 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+.step-card p {
+  font-size: 14px;
+  color: var(--ink-low);
+  line-height: 1.7;
+}
+.step-tag {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  margin-top: 16px;
+  font-weight: 500;
+}
+.tag-auto { background: var(--green-lt); color: var(--green); }
+.tag-fast { background: #EBF2FC; color: #1B4F9A; }
+
+/* ─── WHAT YOU GET ─── */
+.get-section { background: var(--ink); }
+.get-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 96px 56px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+.get-left h2 { color: #F5F3EF; }
+.get-left h2 em { color: #5DCE9A; }
+.get-left .section-tag { color: #5DCE9A; }
+.get-left .section-sub { color: rgba(255,255,255,0.5); max-width: 400px; margin-bottom: 40px; }
+
+.output-list { display: flex; flex-direction: column; gap: 2px; }
+.output-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 20px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+  cursor: default;
+  transition: background 0.15s;
+}
+.output-item:hover { background: rgba(255,255,255,0.07); }
+.output-item-icon {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 16px;
+}
+.oi-green  { background: rgba(93,206,154,0.12); }
+.oi-blue   { background: rgba(100,160,240,0.12); }
+.oi-amber  { background: rgba(220,170,60,0.12);  }
+.oi-purple { background: rgba(160,120,240,0.12); }
+.output-item-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 3px;
+}
+.output-item-desc {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.5;
+}
+
+/* Right: code preview */
+.code-preview {
+  background: #0D0D0B;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  font-family: 'Courier New', monospace;
+}
+.code-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.code-dot { width: 9px; height: 9px; border-radius: 50%; }
+.code-filename {
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  margin-left: 6px;
+  font-family: var(--sans);
+}
+.code-body { padding: 20px 22px; font-size: 12px; line-height: 1.8; }
+.cl  { color: rgba(255,255,255,0.2); }
+.ck  { color: #7CC4FA; }
+.cv  { color: #E3B341; }
+.cs  { color: #A5D6FF; }
+.cg  { color: #5DCE9A; }
+.cp  { color: #D2A8FF; }
+
+/* ─── PRICING ─── */
+.pricing-section { background: var(--off); }
+.pricing-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 96px 56px;
+}
+.pricing-header { text-align: center; margin-bottom: 56px; }
+.pricing-header .section-sub { margin: 0 auto; text-align: center; }
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.price-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 32px;
+  position: relative;
+  transition: box-shadow 0.2s;
+}
+.price-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.07); }
+.price-card.featured {
+  background: var(--ink);
+  border-color: var(--ink);
+  transform: scale(1.03);
+}
+.price-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 99px;
+  margin-bottom: 20px;
+}
+.pt-neutral  { background: var(--off); color: var(--ink-mid); border: 1px solid var(--border); }
+.pt-featured { background: rgba(93,206,154,0.15); color: #5DCE9A; }
+.pt-pro      { background: var(--off); color: var(--ink-mid); border: 1px solid var(--border); }
+
+.price-name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.price-card.featured .price-name { color: #F5F3EF; }
+
+.price-amount {
+  font-family: var(--serif);
+  font-size: 52px;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.price-card.featured .price-amount { color: #F5F3EF; }
+.price-amount sup { font-size: 22px; vertical-align: super; font-family: var(--sans); font-weight: 400; }
+.price-amount span { font-size: 16px; color: var(--ink-low); font-family: var(--sans); font-weight: 300; }
+.price-card.featured .price-amount span { color: rgba(255,255,255,0.4); }
+
+.price-desc {
+  font-size: 13px;
+  color: var(--ink-low);
+  margin-bottom: 28px;
+  line-height: 1.6;
+  min-height: 40px;
+}
+.price-card.featured .price-desc { color: rgba(255,255,255,0.45); }
+
+.price-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.price-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--ink-mid);
+  line-height: 1.5;
+}
+.price-card.featured .price-features li { color: rgba(255,255,255,0.7); }
+.feat-check {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--green-lt);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.price-card.featured .feat-check { background: rgba(93,206,154,0.15); }
+.feat-check::after {
+  content: '';
+  width: 7px; height: 5px;
+  border-left: 1.5px solid var(--green);
+  border-bottom: 1.5px solid var(--green);
+  transform: rotate(-45deg) translate(0,-1px);
+}
+.price-card.featured .feat-check::after { border-color: #5DCE9A; }
+
+.btn-price {
+  display: block;
+  text-align: center;
+  padding: 13px;
+  border-radius: 8px;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.15s;
+  border: none;
+  cursor: pointer;
+}
+.bp-outline  { border: 1.5px solid var(--border); color: var(--ink); background: transparent; }
+.bp-outline:hover  { background: var(--off); }
+.bp-white    { background: #F5F3EF; color: var(--ink); }
+.bp-white:hover    { background: #EAE8E2; }
+
+.setup-note {
+  text-align: center;
+  margin-top: 28px;
+  font-size: 13px;
+  color: var(--ink-low);
+}
+.setup-note strong { color: var(--ink); font-weight: 500; }
+
+/* ─── TESTIMONIALS ─── */
+.testi-section { background: var(--warm); }
+.testi-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 96px 56px;
+}
+.testi-header { text-align: center; margin-bottom: 56px; }
+
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.testi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px 28px;
+}
+.testi-stars { display: flex; gap: 3px; margin-bottom: 16px; }
+.testi-stars span { color: var(--gold); font-size: 14px; }
+.testi-quote {
+  font-family: var(--serif);
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--ink);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+.testi-author { display: flex; align-items: center; gap: 12px; }
+.testi-av {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--off);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 500; color: var(--ink-mid);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.testi-name  { font-size: 13px; font-weight: 500; color: var(--ink); }
+.testi-biz   { font-size: 12px; color: var(--ink-low); }
+
+/* ─── FAQ ─── */
+.faq-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 96px 56px;
+}
+.faq-header { text-align: center; margin-bottom: 48px; }
+
+.faq-list { display: flex; flex-direction: column; gap: 2px; }
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.faq-q {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 22px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--ink);
+  user-select: none;
+  transition: background 0.15s;
+  gap: 16px;
+}
+.faq-q:hover { background: var(--off); }
+.faq-arrow {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--off);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s, background 0.15s;
+}
+.faq-item.open .faq-arrow { transform: rotate(45deg); background: var(--ink); }
+.faq-arrow svg { transition: stroke 0.15s; }
+.faq-item.open .faq-arrow svg path { stroke: white; }
+.faq-a {
+  display: none;
+  padding: 0 22px 18px;
+  font-size: 14px;
+  color: var(--ink-mid);
+  line-height: 1.75;
+  border-top: 1px solid var(--border);
+}
+.faq-item.open .faq-a { display: block; padding-top: 16px; }
+
+/* ─── CTA BANNER ─── */
+.cta-banner {
+  background: var(--ink);
+  padding: 96px 56px;
+  text-align: center;
+}
+.cta-banner h2 {
+  color: #F5F3EF;
+  margin: 0 auto 16px;
+  max-width: 640px;
+}
+.cta-banner h2 em { color: #5DCE9A; }
+.cta-banner p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+  max-width: 480px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+}
+.btn-cta-lg {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #F5F3EF;
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 16px 32px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.1s;
+  border: none;
+  cursor: pointer;
+}
+.btn-cta-lg:hover  { background: #ECEAE4; }
+.btn-cta-lg:active { transform: scale(0.98); }
+.cta-sub {
+  margin-top: 16px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.3);
+}
+
+/* ─── FOOTER ─── */
+footer {
+  background: #0D0D0B;
+  padding: 48px 56px 36px;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 48px;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.footer-brand p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.3);
+  max-width: 240px;
+  margin-top: 10px;
+  line-height: 1.6;
+}
+.footer-col h4 {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 14px;
+}
+.footer-col a {
+  display: block;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  margin-bottom: 9px;
+  transition: color 0.15s;
+}
+.footer-col a:hover { color: rgba(255,255,255,0.85); }
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: rgba(255,255,255,0.2);
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ─── SCROLL REVEAL ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-visual { display: none; }
+  .steps-grid { grid-template-columns: 1fr; gap: 2px; }
+  .get-inner  { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .price-card.featured { transform: none; }
+  .testi-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 680px) {
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  .hero, .section, .section-full, .get-inner,
+  .pricing-inner, .testi-inner, .faq-inner, .cta-banner, footer { padding-left: 24px; padding-right: 24px; }
+  .logo-strip { padding-left: 24px; padding-right: 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7 3l3.5 3.5L7 10" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="nav-logo-name">LeadForge</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#how-it-works">How it works</a></li>
+    <li><a href="#what-you-get">What you get</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="#pricing" class="btn-nav btn-ghost">See pricing</a>
+    <a href="onboarding/index.html" class="btn-nav btn-solid">Get started →</a>
+  </div>
+</nav>
+
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <div class="hero-eyebrow-dot"></div>
+        Marketing infrastructure for small businesses
+      </div>
+      <h1>
+        Stop losing leads.<br>
+        <em>Start knowing</em><br>
+        what's working.
+      </h1>
+      <p class="hero-sub">
+        LeadForge builds your lead magnet page, ad tracking, and CRM
+        in one automated session. Every lead captured. Every campaign
+        measured. Zero technical knowledge required.
+      </p>
+      <div class="hero-actions">
+        <a href="onboarding/index.html" class="btn-primary">
+          Build my infrastructure
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#how-it-works" class="btn-secondary">
+          See how it works
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+      <div class="hero-proof">
+        <div class="proof-stat">
+          <div class="proof-num">$299</div>
+          <div class="proof-label">One-time setup</div>
+        </div>
+        <div class="proof-divider"></div>
+        <div class="proof-stat">
+          <div class="proof-num">2 hrs</div>
+          <div class="proof-label">Average time to live</div>
+        </div>
+        <div class="proof-divider"></div>
+        <div class="proof-stat">
+          <div class="proof-num">$0</div>
+          <div class="proof-label">Monthly infra cost</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="dashboard-card">
+        <div class="dash-header">
+          <div class="dash-dot" style="background:#FF5F57"></div>
+          <div class="dash-dot" style="background:#FEBC2E"></div>
+          <div class="dash-dot" style="background:#28C840"></div>
+          <span class="dash-title">leads-crm.google.com</span>
+        </div>
+        <div class="dash-body">
+          <div class="dash-row">
+            <div class="dash-metric">
+              <div class="dash-metric-label">Leads this month</div>
+              <div class="dash-metric-val green">47</div>
+              <div class="dash-metric-sub">↑ 12 from last month</div>
+            </div>
+            <div class="dash-metric">
+              <div class="dash-metric-label">Cost per lead</div>
+              <div class="dash-metric-val">$8.40</div>
+              <div class="dash-metric-sub" style="color:#1B4F9A">Google Ads</div>
+            </div>
+          </div>
+          <div class="dash-leads-label">Recent leads</div>
+          <div class="dash-lead-row">
+            <div class="dash-avatar av-g">SA</div>
+            <div class="dash-lead-name">Sarah A.</div>
+            <div class="dash-lead-src src-g">google / cpc</div>
+          </div>
+          <div class="dash-lead-row">
+            <div class="dash-avatar av-m">MK</div>
+            <div class="dash-lead-name">Marcus K.</div>
+            <div class="dash-lead-src src-m">meta / paid</div>
+          </div>
+          <div class="dash-lead-row">
+            <div class="dash-avatar av-o">PL</div>
+            <div class="dash-lead-name">Priya L.</div>
+            <div class="dash-lead-src src-o">organic</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-badge">
+        <div class="badge-icon">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="#1A6B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="badge-top">New lead from Google Ads</div>
+          <div class="badge-sub">Wedding photography · Toronto · just now</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ LOGO STRIP ═══ -->
+<div class="logo-strip">
+  <div class="logo-strip-inner">
+    <div class="logo-strip-label">Integrates with</div>
+    <div class="logo-strip-items">
+      <div class="strip-logo"><span class="strip-logo-icon">📊</span> Google Analytics 4</div>
+      <div class="strip-logo"><span class="strip-logo-icon">🏷</span> Google Tag Manager</div>
+      <div class="strip-logo"><span class="strip-logo-icon">📢</span> Google Ads</div>
+      <div class="strip-logo"><span class="strip-logo-icon">👥</span> Meta Ads</div>
+      <div class="strip-logo"><span class="strip-logo-icon">📋</span> Google Sheets</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section id="how-it-works">
+  <div class="section">
+    <div class="reveal">
+      <div class="section-tag">How it works</div>
+      <h2>From zero to <em>fully tracked</em><br>in one session.</h2>
+      <p class="section-sub">Answer five questions about your business. LeadForge handles everything else — no developers, no agencies, no monthly SaaS fees.</p>
+    </div>
+    <div class="steps-grid reveal">
+      <div class="step-card">
+        <div class="step-num-lg">01</div>
+        <div class="step-icon">📝</div>
+        <h3>Fill out the intake form</h3>
+        <p>Tell us your business name, industry, and which ad platforms you're on. Takes under 5 minutes. No technical knowledge needed.</p>
+        <span class="step-tag tag-fast">5 minutes</span>
+      </div>
+      <div class="step-card">
+        <div class="step-num-lg">02</div>
+        <div class="step-icon">⚡</div>
+        <h3>LeadForge builds everything</h3>
+        <p>The agent generates your lead page, configures GTM with every tracking tag, sets up your Google Sheet CRM, and wires it all together automatically.</p>
+        <span class="step-tag tag-auto">Fully automated</span>
+      </div>
+      <div class="step-card">
+        <div class="step-num-lg">03</div>
+        <div class="step-icon">🚀</div>
+        <h3>Go live and track every lead</h3>
+        <p>Every form submission lands in your Google Sheet with the exact campaign, keyword, and ad that brought that lead to you. Run your ads with confidence.</p>
+        <span class="step-tag tag-auto">Zero ongoing setup</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ WHAT YOU GET ═══ -->
+<section id="what-you-get" class="get-section section-full">
+  <div class="get-inner">
+    <div class="get-left reveal">
+      <div class="section-tag">What you get</div>
+      <h2>Every piece of your<br><em>marketing stack</em>,<br>built and connected.</h2>
+      <p class="section-sub">Most small businesses spend thousands on ads but have no idea which ones are working. LeadForge fixes that — permanently.</p>
+      <a href="onboarding/index.html" class="btn-primary" style="background:#F5F3EF;color:#111010;margin-top:8px">
+        Start building →
+      </a>
+    </div>
+    <div class="reveal">
+      <div class="output-list">
+        <div class="output-item">
+          <div class="output-item-icon oi-green">🏠</div>
+          <div>
+            <div class="output-item-title">Lead magnet page</div>
+            <div class="output-item-desc">A conversion-optimised landing page built for your industry. Smart form fields auto-generated for your vertical. No nav, no distractions — just leads.</div>
+          </div>
+        </div>
+        <div class="output-item">
+          <div class="output-item-icon oi-blue">🏷</div>
+          <div>
+            <div class="output-item-title">GTM container, pre-configured</div>
+            <div class="output-item-desc">All tags, triggers, and variables set up automatically — GA4 events, Google Ads conversions, Meta Pixel. Importable in one click.</div>
+          </div>
+        </div>
+        <div class="output-item">
+          <div class="output-item-icon oi-amber">📋</div>
+          <div>
+            <div class="output-item-title">Google Sheets CRM</div>
+            <div class="output-item-desc">Every lead logged with name, email, phone, and the exact UTM campaign that brought them. Colour-coded by source. Zero spreadsheet setup required.</div>
+          </div>
+        </div>
+        <div class="output-item">
+          <div class="output-item-icon oi-purple">📍</div>
+          <div>
+            <div class="output-item-title">UTM persistence across pages</div>
+            <div class="output-item-desc">Even if a lead visits your homepage first, then your contact page, the original ad attribution is preserved and written to your CRM.</div>
+          </div>
+        </div>
+        <div class="output-item">
+          <div class="output-item-icon oi-green">✅</div>
+          <div>
+            <div class="output-item-title">Personalised setup checklist</div>
+            <div class="output-item-desc">A step-by-step guide tailored to your platform — exactly where to paste the GTM snippet, how to deploy the webhook, and how to verify everything is working.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ PRICING ═══ -->
+<section id="pricing" class="pricing-section section-full">
+  <div class="pricing-inner">
+    <div class="pricing-header reveal">
+      <div class="section-tag" style="justify-content:center">Pricing</div>
+      <h2>Simple, <em>honest</em> pricing.</h2>
+      <p class="section-sub">One setup fee. One monthly plan. No hidden costs, no per-lead fees, no surprises.</p>
+    </div>
+    <div class="pricing-grid reveal">
+
+      <div class="price-card">
+        <span class="price-tag pt-neutral">Starter</span>
+        <div class="price-name">Keep the lights on</div>
+        <div class="price-amount"><sup>$</sup>20<span>/mo</span></div>
+        <p class="price-desc">Infrastructure monitoring and monthly backups. For businesses running low ad volume.</p>
+        <ul class="price-features">
+          <li><div class="feat-check"></div>Everything stays live and connected</li>
+          <li><div class="feat-check"></div>Monthly Google Sheet backup</li>
+          <li><div class="feat-check"></div>Email alert if tracking breaks</li>
+          <li><div class="feat-check"></div>Webhook uptime monitoring</li>
+        </ul>
+        <a href="onboarding/index.html" class="btn-price bp-outline">Get started</a>
+      </div>
+
+      <div class="price-card featured">
+        <span class="price-tag pt-featured">Most popular</span>
+        <div class="price-name">Growth</div>
+        <div class="price-amount"><sup>$</sup>49<span>/mo</span></div>
+        <p class="price-desc">Infra plus a monthly lead report so you always know which campaigns are working.</p>
+        <ul class="price-features">
+          <li><div class="feat-check"></div>Everything in Starter</li>
+          <li><div class="feat-check"></div>Monthly lead volume report</li>
+          <li><div class="feat-check"></div>Source & campaign breakdown</li>
+          <li><div class="feat-check"></div>Cost-per-lead calculation</li>
+          <li><div class="feat-check"></div>Emailed directly to you</li>
+        </ul>
+        <a href="onboarding/index.html" class="btn-price bp-white">Get started</a>
+      </div>
+
+      <div class="price-card">
+        <span class="price-tag pt-pro">Pro</span>
+        <div class="price-name">Managed infra</div>
+        <div class="price-amount"><sup>$</sup>99<span>/mo</span></div>
+        <p class="price-desc">Full weekly health checks, attribution audits, and one page update per month.</p>
+        <ul class="price-features">
+          <li><div class="feat-check"></div>Everything in Growth</li>
+          <li><div class="feat-check"></div>Weekly tracking health check</li>
+          <li><div class="feat-check"></div>Alert if pixel/conversion stops firing</li>
+          <li><div class="feat-check"></div>UTM attribution audit</li>
+          <li><div class="feat-check"></div>1 page update per month</li>
+        </ul>
+        <a href="onboarding/index.html" class="btn-price bp-outline">Get started</a>
+      </div>
+
+    </div>
+    <p class="setup-note reveal">All plans include a <strong>$299 one-time setup fee.</strong> This covers the full build, GTM configuration, CRM setup, and handoff checklist.</p>
+  </div>
+</section>
+
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="testi-section section-full">
+  <div class="testi-inner">
+    <div class="testi-header reveal">
+      <div class="section-tag" style="justify-content:center">From our clients</div>
+      <h2>Small businesses that <em>finally</em><br>know where their leads come from.</h2>
+    </div>
+    <div class="testi-grid reveal">
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">"I was spending $800/month on Google Ads with no idea if it was working. LeadForge showed me exactly which keywords were bringing in clients. I cut my budget by 30% and got more leads."</p>
+        <div class="testi-author">
+          <div class="testi-av">PK</div>
+          <div>
+            <div class="testi-name">Priya K.</div>
+            <div class="testi-biz">Photography studio, Toronto</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">"Setup took one afternoon. Now every parent who books a chess lesson for their kid, I know exactly which Facebook ad they came from. Couldn't do this myself in a month."</p>
+        <div class="testi-author">
+          <div class="testi-av">SR</div>
+          <div>
+            <div class="testi-name">Sam R.</div>
+            <div class="testi-biz">Chess academy, Vancouver</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-quote">"The CRM in Google Sheets sounds basic but it's exactly what I needed. No $200/month CRM subscription. Just a clean sheet that tells me who called and how they found me."</p>
+        <div class="testi-author">
+          <div class="testi-av">ML</div>
+          <div>
+            <div class="testi-name">Marcus L.</div>
+            <div class="testi-biz">Plumbing &amp; HVAC, Calgary</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ FAQ ═══ -->
+<section id="faq">
+  <div class="faq-inner">
+    <div class="faq-header reveal">
+      <div class="section-tag" style="justify-content:center">FAQ</div>
+      <h2>Questions we <em>always</em> get.</h2>
+    </div>
+    <div class="faq-list reveal">
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Do I need a Google Tag Manager account already?
+          <div class="faq-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#111010" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="faq-a">No. If you don't have GTM or GA4, LeadForge creates them for you automatically using your Google account. You click "Connect Google account", approve the permissions, and both accounts are created and configured in under a minute — with your service account access already granted.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          What if my website is on Wix or Squarespace?
+          <div class="faq-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#111010" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="faq-a">No problem. Wix and Squarespace restrict access to the &lt;head&gt; tag, so LeadForge deploys your lead magnet page to a free subdomain (go.yourdomain.com) on Netlify instead. We configure cross-domain tracking in GTM automatically so your attribution still flows correctly.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Will this replace my existing website or contact page?
+          <div class="faq-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#111010" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="faq-a">Never. LeadForge always creates a new dedicated page alongside your existing site — we never touch or overwrite your current pages. Your contact page stays exactly as it is. The lead magnet page is a new, distraction-free page that you link to from your ads.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          How does the Google Sheets CRM work?
+          <div class="faq-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#111010" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="faq-a">When a visitor fills out your lead form, the data is sent to a Google Apps Script webhook that appends a row to your Google Sheet. Each row includes the lead's name, email, phone, city, message, and the full UTM attribution — source, medium, campaign, keyword, and landing page URL. Rows are colour-coded by source so you can scan at a glance. The sheet is yours — no third-party access.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          What happens if a lead visits multiple pages before filling out the form?
+          <div class="faq-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#111010" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="faq-a">LeadForge installs a UTM persistence script via GTM on every page of your site. The moment a visitor arrives with UTM parameters in the URL, those values are saved to sessionStorage. Even if they browse three more pages before submitting the form, the original campaign attribution is preserved and written to your CRM.</div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          Is there a long-term contract?
+          <div class="faq-arrow"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#111010" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        </div>
+        <div class="faq-a">No contracts. Cancel anytime. If you cancel, everything we built is still yours — your GTM container, GA4 property, Google Sheet, and all your lead data. You own all of it. We just won't monitor and maintain it for you anymore.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-banner">
+  <h2>Your next lead deserves to be <em>tracked.</em></h2>
+  <p>Stop guessing which campaigns work. Build the infrastructure once and let it run.</p>
+  <a href="onboarding/index.html" class="btn-cta-lg">
+    Build my infrastructure
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <p class="cta-sub">$299 setup · $49/month · cancel anytime</p>
+</section>
+
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:0">
+          <div class="nav-logo-mark" style="background:#2A2A28">
+            <svg viewBox="0 0 13 13" fill="none"><path d="M2 6.5h9M7 3l3.5 3.5L7 10" stroke="#5DCE9A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span style="color:rgba(255,255,255,0.8);font-size:15px;font-weight:500;letter-spacing:-0.01em">LeadForge</span>
+        </div>
+        <p>Marketing infrastructure for small businesses. Built once, runs forever.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#how-it-works">How it works</a>
+        <a href="#what-you-get">What you get</a>
+        <a href="#pricing">Pricing</a>
+        <a href="onboarding/index.html">Get started</a>
+      </div>
+      <div class="footer-col">
+        <h4>Integrations</h4>
+        <a href="#">Google Tag Manager</a>
+        <a href="#">Google Analytics 4</a>
+        <a href="#">Google Ads</a>
+        <a href="#">Meta Ads</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Privacy policy</a>
+        <a href="#">Terms of service</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 LeadForge. All rights reserved.</span>
+      <span>Built for small businesses that take marketing seriously.</span>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+/* FAQ accordion */
+function toggleFaq(el) {
+  var item = el.parentElement;
+  var isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(function(i) { i.classList.remove('open'); });
+  if (!isOpen) item.classList.add('open');
+}
+
+/* Scroll reveal */
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+
+/* Animate dashboard lead rows in hero */
+var rows = document.querySelectorAll('.dash-lead-row');
+var names  = ['Sarah A.','Marcus K.','Priya L.','James T.','Nadia C.','Oluwaseun A.'];
+var inits  = ['SA','MK','PL','JT','NC','OA'];
+var srcs   = [['google / cpc','src-g','av-g'],['meta / paid','src-m','av-m'],['organic','src-o','av-o'],['meta / paid','src-m','av-m'],['google / cpc','src-g','av-g'],['organic','src-o','av-o']];
+var idx = 0;
+setInterval(function() {
+  if (!rows.length) return;
+  idx = (idx + 1) % names.length;
+  var row = rows[0];
+  row.style.transition = 'opacity 0.3s';
+  row.style.opacity = '0';
+  setTimeout(function() {
+    var src = srcs[idx];
+    row.querySelector('.dash-avatar').className = 'dash-avatar ' + src[2];
+    row.querySelector('.dash-avatar').textContent = inits[idx];
+    row.querySelector('.dash-lead-name').textContent = names[idx];
+    row.querySelector('.dash-lead-src').className = 'dash-lead-src ' + src[1];
+    row.querySelector('.dash-lead-src').textContent = src[0];
+    row.style.opacity = '1';
+  }, 320);
+}, 2800);
+</script>
+
+</body>
+</html>
