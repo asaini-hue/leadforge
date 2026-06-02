@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your page is ready — LeadForge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #F7F6F3; --surface: #FFFFFF; --border: #E4E2DC; --border-md: #CCCAB8;
+  --ink: #1A1916; --ink-mid: #4A4840; --ink-low: #8A8880;
+  --green: #1A6B4A; --green-lt: #E8F5EF; --green-md: #2A8B62;
+  --blue: #1B4F9A; --blue-lt: #EBF2FC;
+  --warn: #B45309; --warn-lt: #FEF3C7;
+  --danger: #C0392B; --danger-lt: #FDECEA;
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Geist', system-ui, sans-serif;
+  --radius: 10px; --radius-sm: 6px;
+}
+html { font-size: 16px; }
+body { background: var(--bg); font-family: var(--sans); color: var(--ink); min-height: 100vh; line-height: 1.6; }
+
+/* ── NAV ── */
+nav { display: flex; align-items: center; justify-content: space-between; padding: 0 40px; height: 58px; background: rgba(247,246,243,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 10; }
+.nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+.nav-logo-mark { width: 26px; height: 26px; background: var(--ink); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+.nav-logo-mark svg { width: 12px; height: 12px; }
+.nav-logo-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+
+/* ── STATES ── */
+.state { display: none; }
+.state.active { display: block; }
+
+/* ── LOADING STATE ── */
+#state-loading { text-align: center; padding: 80px 40px; }
+.loading-spinner {
+  width: 48px; height: 48px; border: 3px solid var(--border);
+  border-top-color: var(--green); border-radius: 50%;
+  animation: spin 0.9s linear infinite; margin: 0 auto 28px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-title { font-family: var(--serif); font-size: 26px; color: var(--ink); margin-bottom: 10px; }
+.loading-sub { font-size: 14px; color: var(--ink-low); max-width: 360px; margin: 0 auto 32px; line-height: 1.7; }
+.progress-steps { display: flex; flex-direction: column; gap: 10px; max-width: 320px; margin: 0 auto; text-align: left; }
+.prog-step { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--ink-mid); transition: all 0.3s; }
+.prog-step.done  { border-color: var(--green); background: var(--green-lt); color: var(--green); }
+.prog-step.active { border-color: var(--blue);  background: var(--blue-lt);  color: var(--blue); }
+.prog-icon { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; }
+.prog-step.active .prog-icon { border-color: var(--blue); }
+.prog-spinner { width: 14px; height: 14px; border: 1.5px solid var(--blue-lt); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; }
+
+/* ── RESULT STATE ── */
+#state-result { max-width: 900px; margin: 0 auto; padding: 40px 40px 80px; }
+
+.result-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.result-check { width: 44px; height: 44px; background: var(--green-lt); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.result-title { font-family: var(--serif); font-size: 26px; color: var(--ink); margin-bottom: 4px; }
+.result-sub { font-size: 14px; color: var(--ink-low); line-height: 1.6; }
+
+/* ── ACTIONS BAR ── */
+.actions-bar { display: flex; gap: 10px; margin-bottom: 28px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: var(--radius-sm); font-family: var(--sans); font-size: 13px; font-weight: 500; cursor: pointer; text-decoration: none; transition: all 0.15s; border: none; }
+.btn-primary  { background: var(--ink); color: #fff; }
+.btn-primary:hover  { background: var(--ink-mid); }
+.btn-outline  { background: transparent; color: var(--ink-mid); border: 1px solid var(--border); }
+.btn-outline:hover  { background: var(--surface); }
+.btn-green    { background: var(--green); color: #fff; }
+.btn-green:hover    { background: var(--green-md); }
+
+/* ── PREVIEW FRAME ── */
+.preview-wrap { background: var(--ink); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
+.preview-toolbar { display: flex; align-items: center; gap: 8px; padding: 10px 16px; }
+.preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+.preview-url { flex: 1; background: rgba(255,255,255,0.08); border-radius: 4px; padding: 5px 12px; font-size: 12px; color: rgba(255,255,255,0.5); font-family: var(--sans); }
+.preview-frame-outer { background: #fff; height: 520px; overflow: hidden; position: relative; }
+.preview-frame-outer iframe { width: 100%; height: 100%; border: none; transform-origin: top left; }
+.preview-overlay { position: absolute; bottom: 0; left: 0; right: 0; height: 80px; background: linear-gradient(to top, rgba(17,16,14,0.6), transparent); display: flex; align-items: flex-end; justify-content: center; padding-bottom: 14px; }
+.preview-scroll-hint { font-size: 12px; color: rgba(255,255,255,0.7); }
+
+/* ── NEXT STEPS ── */
+.next-steps-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 12px; }
+.steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-bottom: 28px; }
+.next-step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+.ns-num { font-size: 11px; font-weight: 500; color: var(--ink-low); margin-bottom: 6px; letter-spacing: 0.06em; text-transform: uppercase; }
+.ns-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+.ns-desc { font-size: 13px; color: var(--ink-low); line-height: 1.6; }
+.ns-tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 99px; margin-top: 8px; font-weight: 500; }
+.tag-auto { background: var(--green-lt); color: var(--green); }
+.tag-manual { background: var(--warn-lt); color: var(--warn); }
+
+/* ── INFO BLOCK ── */
+.info-block { display: flex; gap: 10px; padding: 13px 15px; border-radius: var(--radius); font-size: 13px; line-height: 1.6; margin-bottom: 20px; align-items: flex-start; }
+.ib-blue { background: var(--blue-lt); color: #163D7A; border: 1px solid rgba(27,79,154,0.12); }
+.ib-warn { background: var(--warn-lt); color: #7C3A09; border: 1px solid rgba(180,83,9,0.12); }
+.ib-icon { flex-shrink: 0; margin-top: 1px; }
+code { font-size: 11px; background: rgba(0,0,0,0.07); padding: 1px 5px; border-radius: 3px; font-family: monospace; }
+
+/* ── ERROR STATE ── */
+#state-error { text-align: center; padding: 80px 40px; }
+.error-icon { width: 52px; height: 52px; background: var(--danger-lt); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.error-title { font-family: var(--serif); font-size: 24px; color: var(--ink); margin-bottom: 10px; }
+.error-msg { font-size: 14px; color: var(--ink-low); max-width: 400px; margin: 0 auto 28px; line-height: 1.7; }
+.error-detail { font-family: monospace; font-size: 12px; background: #f5f5f5; padding: 12px; border-radius: 6px; max-width: 500px; margin: 0 auto 28px; text-align: left; color: var(--danger); word-break: break-all; }
+
+@media (max-width: 680px) {
+  nav, #state-result { padding-left: 20px; padding-right: 20px; }
+  .actions-bar { flex-direction: column; }
+  .btn { justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-mark"><svg viewBox="0 0 12 12" fill="none"><path d="M1.5 6h9M7 2.5l3.5 3.5L7 9.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="nav-logo-name">LeadForge</span>
+  </a>
+  <a href="/onboarding" style="font-size:13px;color:var(--ink-low);text-decoration:none">← Back to onboarding</a>
+</nav>
+
+<!-- ═══ LOADING ═══ -->
+<div id="state-loading" class="state active">
+  <div class="loading-spinner"></div>
+  <h1 class="loading-title">Building your lead page…</h1>
+  <p class="loading-sub">LeadForge is generating a custom page for your business. This takes about 20–30 seconds.</p>
+  <div class="progress-steps">
+    <div class="prog-step active" id="prog-1">
+      <div class="prog-icon"><div class="prog-spinner"></div></div>
+      Generating page copy &amp; layout
+    </div>
+    <div class="prog-step" id="prog-2">
+      <div class="prog-icon">2</div>
+      Adding smart form fields
+    </div>
+    <div class="prog-step" id="prog-3">
+      <div class="prog-icon">3</div>
+      Wiring tracking &amp; UTM capture
+    </div>
+    <div class="prog-step" id="prog-4">
+      <div class="prog-icon">4</div>
+      Finalising HTML file
+    </div>
+  </div>
+</div>
+
+<!-- ═══ RESULT ═══ -->
+<div id="state-result" class="state">
+  <div class="result-header">
+    <div class="result-check">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 11l5 5 9-9" stroke="#1A6B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div>
+      <h1 class="result-title" id="result-title">Your lead page is ready.</h1>
+      <p class="result-sub" id="result-sub">Download the HTML file and follow the steps below to go live.</p>
+    </div>
+  </div>
+
+  <div class="actions-bar">
+    <button class="btn btn-green" id="download-btn" onclick="downloadPage()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2v7M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Download HTML file
+    </button>
+    <button class="btn btn-outline" onclick="openPreview()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M4.5 7h5M7 4.5v5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Open full preview
+    </button>
+    <button class="btn btn-outline" onclick="copyHTML()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="4" y="4" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M2 10V2.5A.5.5 0 012.5 2H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span id="copy-label">Copy HTML</span>
+    </button>
+    <a href="/onboarding" class="btn btn-outline">Start a new page</a>
+  </div>
+
+  <!-- Preview frame -->
+  <div class="preview-wrap">
+    <div class="preview-toolbar">
+      <div class="preview-dot" style="background:#FF5F57"></div>
+      <div class="preview-dot" style="background:#FEBC2E"></div>
+      <div class="preview-dot" style="background:#28C840"></div>
+      <div class="preview-url" id="preview-url">your-business-lead-page.html</div>
+    </div>
+    <div class="preview-frame-outer">
+      <iframe id="preview-iframe" title="Lead page preview" sandbox="allow-same-origin allow-scripts"></iframe>
+      <div class="preview-overlay">
+        <span class="preview-scroll-hint">Scroll to see the full page ↕</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deployment path info -->
+  <div class="info-block ib-blue" id="deploy-info">
+    <svg class="ib-icon" width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="6.5" stroke="currentColor" stroke-width="1.4"/><path d="M7.5 6.5v4.5M7.5 4.5v.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <span id="deploy-info-text"></span>
+  </div>
+
+  <!-- Remaining manual step -->
+  <div class="info-block ib-warn" id="webhook-reminder">
+    <svg class="ib-icon" width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M7.5 1.5L13.5 12.5H1.5L7.5 1.5Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M7.5 6v3M7.5 10.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    <span>Before going live, replace <code>APPS_SCRIPT_URL_HERE</code> in the downloaded file with your deployed Apps Script webhook URL. The webhook code was generated earlier in your setup — deploy it in Google Sheets → Extensions → Apps Script first.</span>
+  </div>
+
+  <!-- Next steps -->
+  <div class="next-steps-title">What to do next</div>
+  <div class="steps-grid" id="steps-grid"></div>
+</div>
+
+<!-- ═══ ERROR ═══ -->
+<div id="state-error" class="state">
+  <div class="error-icon">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 8v4M11 14.5v.5" stroke="#C0392B" stroke-width="2" stroke-linecap="round"/><path d="M3 18L11 4l8 14H3z" stroke="#C0392B" stroke-width="1.5" stroke-linejoin="round"/></svg>
+  </div>
+  <h2 class="error-title">Something went wrong.</h2>
+  <p class="error-msg">The page couldn't be generated. Check the error details below, then try again.</p>
+  <div class="error-detail" id="error-detail"></div>
+  <a href="/onboarding" class="btn btn-primary" style="display:inline-flex;margin:0 auto">← Go back and try again</a>
+</div>
+
+<script>
+var generatedHTML = '';
+var filename      = '';
+var deployPath    = '';
+
+/* ── Read result from sessionStorage (set by intake form) ── */
+function init() {
+  var raw = sessionStorage.getItem('leadforge_result');
+  if (raw) {
+    try {
+      var result = JSON.parse(raw);
+      sessionStorage.removeItem('leadforge_result');
+      showResult(result);
+      return;
+    } catch(e) {}
+  }
+
+  /* No result in storage — check URL param for error */
+  var params = new URLSearchParams(window.location.search);
+  var err = params.get('error');
+  if (err) {
+    showError(decodeURIComponent(err));
+    return;
+  }
+
+  /* No data at all — redirect back to onboarding */
+  window.location.href = '/onboarding';
+}
+
+/* ── Animate progress steps during loading ── */
+function animateProgress() {
+  var steps = [1, 2, 3, 4];
+  var delays = [0, 6000, 12000, 20000];
+  steps.forEach(function(n, i) {
+    setTimeout(function() {
+      if (n > 1) {
+        var prev = document.getElementById('prog-' + (n-1));
+        if (prev) {
+          prev.classList.remove('active');
+          prev.classList.add('done');
+          prev.querySelector('.prog-icon').innerHTML = '✓';
+        }
+      }
+      var cur = document.getElementById('prog-' + n);
+      if (cur) {
+        cur.classList.add('active');
+        cur.querySelector('.prog-icon').innerHTML = '<div class="prog-spinner"></div>';
+      }
+    }, delays[i]);
+  });
+}
+
+/* ── Show result state ── */
+function showResult(result) {
+  generatedHTML = result.html;
+  filename      = result.filename || 'lead-page.html';
+  deployPath    = result.deploy_path || 'same_domain';
+
+  setState('result');
+
+  document.getElementById('result-title').textContent =
+    result.business_name + ' — your lead page is ready.';
+  document.getElementById('result-sub').textContent =
+    'A custom ' + result.industry + ' lead page built for ' + result.business_name + '. Download it and follow the steps below to go live.';
+  document.getElementById('preview-url').textContent = filename;
+
+  /* Inject into iframe */
+  var iframe = document.getElementById('preview-iframe');
+  var blob = new Blob([generatedHTML], { type: 'text/html' });
+  iframe.src = URL.createObjectURL(blob);
+
+  /* Deploy path info */
+  var deployText = deployPath === 'same_domain'
+    ? 'Deployment path: <strong>new page on your existing domain</strong> — upload this file to your website and add it as a new page (e.g. <code>yourdomain.com/free-consultation</code>). Then paste your GTM snippet into the &lt;head&gt; tag.'
+    : 'Deployment path: <strong>subdomain via Netlify</strong> — drag this file onto netlify.com/drop. You\'ll get a URL like <code>go.yourdomain.com</code>. Add a CNAME record in your DNS pointing the subdomain to Netlify.';
+  document.getElementById('deploy-info-text').innerHTML = deployText;
+
+  /* Next steps */
+  buildNextSteps(result);
+}
+
+/* ── Build contextual next steps ── */
+function buildNextSteps(result) {
+  var isSameDomain = result.deploy_path === 'same_domain';
+  var hasGads  = !!result.gads_account;
+  var hasPixel = !!result.meta_pixel_id;
+
+  var steps = [
+    {
+      num: '01',
+      title: 'Deploy your Apps Script webhook',
+      desc: 'Open the <code>priya-studios-crm-webhook.js</code> file generated earlier. Paste it into Google Sheets → Extensions → Apps Script. Run <code>initSheet()</code> once, then deploy as a web app. Copy the URL.',
+      tag: 'tag-manual',
+      tagText: 'Manual step'
+    },
+    {
+      num: '02',
+      title: 'Swap the webhook URL in your page',
+      desc: 'Open the downloaded HTML file in any text editor. Find <code>APPS_SCRIPT_URL_HERE</code> and replace it with the Apps Script web app URL you just copied.',
+      tag: 'tag-manual',
+      tagText: 'Manual step'
+    },
+    {
+      num: '03',
+      title: isSameDomain ? 'Upload to your website' : 'Drop onto Netlify',
+      desc: isSameDomain
+        ? 'Upload the HTML file to your website via your CMS or FTP. Set the page URL to something like <code>/free-consultation</code>.'
+        : 'Go to <strong>netlify.com/drop</strong> and drag the HTML file onto the page. You get a live URL instantly.',
+      tag: 'tag-manual',
+      tagText: 'Manual step'
+    },
+    {
+      num: '04',
+      title: 'Import your GTM container',
+      desc: 'The GTM container JSON was generated for you. In GTM → Admin → Import Container — upload the JSON file. Publish the container.',
+      tag: 'tag-manual',
+      tagText: 'Manual step'
+    },
+    {
+      num: '05',
+      title: 'Verify in GA4 DebugView',
+      desc: 'Open your live page with <code>?utm_source=google&utm_medium=cpc&utm_campaign=test</code> in the URL. Fill and submit the form. In GA4 → Configure → DebugView, confirm a <code>generate_lead</code> event appears.',
+      tag: 'tag-manual',
+      tagText: 'Verification'
+    },
+  ];
+
+  if (hasGads) {
+    steps.push({
+      num: '06',
+      title: 'Check Google Ads conversion',
+      desc: 'In Google Ads → Goals → Conversions, confirm a conversion action was created. Submit a test form and check the conversion registers within 24 hours.',
+      tag: 'tag-manual',
+      tagText: 'Verification'
+    });
+  }
+
+  if (hasPixel) {
+    steps.push({
+      num: hasGads ? '07' : '06',
+      title: 'Verify Meta Pixel Lead event',
+      desc: 'Install the Meta Pixel Helper Chrome extension. Load your live page and submit a test form. Confirm a <strong>Lead</strong> event fires in the extension popup.',
+      tag: 'tag-manual',
+      tagText: 'Verification'
+    });
+  }
+
+  var html = steps.map(function(s) {
+    return '<div class="next-step">'
+      + '<div class="ns-num">Step ' + s.num + '</div>'
+      + '<div class="ns-title">' + s.title + '</div>'
+      + '<div class="ns-desc">' + s.desc + '</div>'
+      + '<span class="ns-tag ' + s.tag + '">' + s.tagText + '</span>'
+      + '</div>';
+  }).join('');
+
+  document.getElementById('steps-grid').innerHTML = html;
+}
+
+/* ── Show error state ── */
+function showError(msg) {
+  setState('error');
+  document.getElementById('error-detail').textContent = msg || 'Unknown error.';
+}
+
+/* ── Toggle visible state ── */
+function setState(name) {
+  document.querySelectorAll('.state').forEach(function(el) {
+    el.classList.toggle('active', el.id === 'state-' + name);
+  });
+}
+
+/* ── Download ── */
+function downloadPage() {
+  if (!generatedHTML) return;
+  var blob = new Blob([generatedHTML], { type: 'text/html' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+/* ── Open full preview ── */
+function openPreview() {
+  if (!generatedHTML) return;
+  var blob = new Blob([generatedHTML], { type: 'text/html' });
+  var url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+}
+
+/* ── Copy HTML ── */
+function copyHTML() {
+  if (!generatedHTML) return;
+  navigator.clipboard.writeText(generatedHTML).then(function() {
+    var label = document.getElementById('copy-label');
+    label.textContent = 'Copied!';
+    setTimeout(function() { label.textContent = 'Copy HTML'; }, 2000);
+  });
+}
+
+init();
+animateProgress();
+</script>
+
+</body>
+</html>
