@@ -1,0 +1,20 @@
+# LeadForge — Netlify configuration
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/*"
+  to   = "/.netlify/functions/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/onboarding"
+  to   = "/onboarding/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/results"
+  to   = "/results/index.html"
+  status = 200
