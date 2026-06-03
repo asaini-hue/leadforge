@@ -273,16 +273,25 @@ function animateProgress() {
 
 /* ── Show result state ── */
 function showResult(result) {
+  /* Guard: if html is missing, show error instead */
+  if (!result.html || result.html.trim() === '' || result.html === 'undefined') {
+    showError('The generator returned an empty page. This usually means the form data was incomplete. Please go back, fill in all required fields, and try again.');
+    return;
+  }
+
   generatedHTML = result.html;
   filename      = result.filename || 'lead-page.html';
   deployPath    = result.deploy_path || 'same_domain';
 
+  var bizName  = result.business_name || 'Your business';
+  var industry = result.industry      || 'your industry';
+
   setState('result');
 
   document.getElementById('result-title').textContent =
-    result.business_name + ' — your lead page is ready.';
+    bizName + ' — your lead page is ready.';
   document.getElementById('result-sub').textContent =
-    'A custom ' + result.industry + ' lead page built for ' + result.business_name + '. Download it and follow the steps below to go live.';
+    'A custom ' + industry + ' lead page built for ' + bizName + '. Download it and follow the steps below to go live.';
   document.getElementById('preview-url').textContent = filename;
 
   /* Inject into iframe */
