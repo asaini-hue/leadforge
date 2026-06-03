@@ -1034,10 +1034,22 @@ function makeSection(title, stepNum, rows) {
 }
 
 function submitForm() {
+  /* ── Collect all form data fresh right before sending ── */
+  collectData();
+
+  /* ── Safety check: make sure required fields are present ── */
+  if (!formData.business_name || !formData.industry || !formData.primary_offer) {
+    alert('Missing required fields. Please go back and check your business name, industry, and offer are filled in.');
+    return;
+  }
+
   /* ── Show generating state ── */
   document.getElementById('buildBtn').disabled = true;
   document.getElementById('buildBtn').innerHTML =
     '<div style="width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite"></div> Building…';
+
+  /* ── Log what we are sending (visible in browser console for debugging) ── */
+  console.log('Sending to /api/generate:', formData);
 
   /* ── POST to Netlify serverless function ── */
   fetch('/api/generate', {
@@ -1045,16 +1057,26 @@ function submitForm() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(formData)
   })
-  .then(function(res) { return res.json(); })
+  .then(function(res) {
+    if (!res.ok) {
+      return res.text().then(function(t) { throw new Error('Server error ' + res.status + ': ' + t); });
+    }
+    return res.json();
+  })
   .then(function(result) {
     if (result.error) throw new Error(result.error);
+    if (!result.html) throw new Error('No HTML returned from generator. Check Netlify function logs.');
     /* Store result in sessionStorage — results page reads it */
     sessionStorage.setItem('leadforge_result', JSON.stringify(result));
     /* Redirect to results page */
     window.location.href = '/results';
   })
   .catch(function(err) {
-    /* On error redirect to results page with error param */
+    /* Re-enable button so user can try again */
+    document.getElementById('buildBtn').disabled = false;
+    document.getElementById('buildBtn').innerHTML =
+      '<svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M9 3.5l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Build my infrastructure';
+    /* Redirect to results page with error */
     window.location.href = '/results?error=' + encodeURIComponent(err.message || 'Generation failed');
   });
 }
